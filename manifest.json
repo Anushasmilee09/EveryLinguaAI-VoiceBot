@@ -1,0 +1,66 @@
+{
+  "name": "EveryLingua AI - Motorcycle Dealership Assistant",
+  "short_name": "EveryLingua AI",
+  "description": "Multilingual AI-powered voice assistant for motorcycle dealership services",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#667eea",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en",
+  "categories": ["business", "lifestyle", "utilities"],
+  "icons": [
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iNjQiIGZpbGw9InVybCgjZ3JhZGllbnQwKSIvPgo8cGF0aCBkPSJNMjU2IDE2MEMxNjAgMTYwIDE0NCAyMjQgMTQ0IDI4OEMxNDQgMzUyIDE2MCA0MTYgMjU2IDQxNkMzNTIgNDE2IDM2OCAzNTIgMzY4IDI4OEMzNjggMjI0IDM1MiAxNjAgMjU2IDE2MFoiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuOSIvPgo8Y2lyY2xlIGN4PSIxNzYiIGN5PSIzMjAiIHI9IjQ4IiBmaWxsPSIjMGYxNzJhIi8+CjxjaXJjbGUgY3g9IjMzNiIgY3k9IjMyMCIgcj0iNDgiIGZpbGw9IiMwZjE3MmEiLz4KPHBhdGggZD0iTTE5MiAyMjRIMzIwTDM1MiAyODhIMTYwTDE5MiAyMjRaIiBmaWxsPSIjMGYxNzJhIiBmaWxsLW9wYWNpdHk9IjAuMyIvPgo8Y2lyY2xlIGN4PSIyNTYiIGN5PSIxMjgiIHI9IjMyIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjciLz4KPGRlZnM+CjxsaW5lYXJHcmFkaWVudCBpZD0iZ3JhZGllbnQwIiB4MT0iMCIgeTE9IjAiIHgyPSI1MTIiIHkyPSI1MTIiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KPHN0b3Agc3RvcC1jb2xvcj0iIzY2N0VFQSIvPgo8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM3NjRCQTIiLz4KPC9saW5lYXJHcmFkaWVudD4KPC9kZWZzPgo8L3N2Zz4K",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMjQiIGZpbGw9InVybCgjZ3JhZGllbnQwKSIvPgo8cGF0aCBkPSJNOTYgNjBDNjAgNjAgNTQgODQgNTQgMTA4QzU0IDEzMiA2MCAxNTYgOTYgMTU2QzEzMiAxNTYgMTM4IDEzMiAxMzggMTA4QzEzOCA4NCAxMzIgNjAgOTYgNjBaIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjkiLz4KPGNpcmNsZSBjeD0iNjYiIGN5PSIxMjAiIHI9IjE4IiBmaWxsPSIjMGYxNzJhIi8+CjxjaXJjbGUgY3g9IjEyNiIgY3k9IjEyMCIgcj0iMTgiIGZpbGw9IiMwZjE3MmEiLz4KPGNpcmNsZSBjeD0iOTYiIGN5PSI0OCIgcj0iMTIiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNyIvPgo8ZGVmcz4KPGxpbmVhckdyYWRpZW50IGlkPSJncmFkaWVudDAiIHgxPSIwIiB5MT0iMCIgeDI9IjE5MiIgeTI9IjE5MiIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPgo8c3RvcCBzdG9wLWNvbG9yPSIjNjY3RUVBIi8+CjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzc2NEJBMiIvPgo8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+Cjwvc3ZnPgo=",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Book Test Ride",
+      "short_name": "Test Ride",
+      "description": "Schedule a motorcycle test ride",
+      "url": "/?action=test-ride",
+      "icons": [{ "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCA5NiA5NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHJ4PSIxNiIgZmlsbD0iIzg2N0VFQSIvPjxwYXRoIGQ9Ik0yMCA2MEg3NkwgNzAgNzBIMjZMMjAgNjBaIiBmaWxsPSJ3aGl0ZSIvPjxjaXJjbGUgY3g9IjMwIiBjeT0iNjUiIHI9IjEyIiBmaWxsPSJ3aGl0ZSIvPjxjaXJjbGUgY3g9IjY2IiBjeT0iNjUiIHI9IjEyIiBmaWxsPSJ3aGl0ZSIvPjwvc3ZnPg==", "sizes": "96x96" }]
+    },
+    {
+      "name": "Book Service",
+      "short_name": "Service",
+      "description": "Book a motorcycle service appointment",
+      "url": "/?action=service",
+      "icons": [{ "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCA5NiA5NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHJ4PSIxNiIgZmlsbD0iIzEwYjk4MSIvPjxwYXRoIGQ9Ik00OCAyMEw2MCA0MEg3Mkw0OCA3Nkw0OCA0MEgzNkw0OCAyMFoiIGZpbGw9IndoaXRlIi8+PC9zdmc+", "sizes": "96x96" }]
+    },
+    {
+      "name": "Find Dealer",
+      "short_name": "Dealers",
+      "description": "Find nearby motorcycle dealerships",
+      "url": "/dealer_locator.html",
+      "icons": [{ "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCA5NiA5NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHJ4PSIxNiIgZmlsbD0iI2VmNDQ0NCIvPjxwYXRoIGQ9Ik00OCAyMEM2MCAyMCA2OCAzMiA2OCA0NEM2OCA2MCA0OCA4MCA0OCA4MEM0OCA4MCAyOCA2MCAyOCA0NEMyOCAzMiAzNiAyMCA0OCAyMFoiIGZpbGw9IndoaXRlIi8+PGNpcmNsZSBjeD0iNDgiIGN5PSI0NCIgcj0iMTAiIGZpbGw9IiNlZjQ0NDQiLz48L3N2Zz4=", "sizes": "96x96" }]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "features": [
+    "Multilingual voice assistant",
+    "Test ride booking",
+    "Service appointment scheduling",
+    "Dealer locator",
+    "EMI calculator",
+    "24/7 AI support"
+  ],
+  "permissions": [
+    "microphone",
+    "geolocation",
+    "notifications"
+  ]
+}

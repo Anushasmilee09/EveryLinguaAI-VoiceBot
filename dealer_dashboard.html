@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EveryLingua AI - Dealer Dashboard</title>
+    
+    <!-- PWA Configuration -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="EveryLingua AI">
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjE5MiIgaGVpZ2h0PSIxOTIiIHJ4PSIyNCIgZmlsbD0idXJsKCNncmFkaWVudDBfbGluZWFyXzFfMSkiLz48cGF0aCBkPSJNOTYgNjRDMjYuODYyOSA2NCAzMiAxMDYuODYzIDMyIDE3NkgxNjBDNjQgMjQwIDExOS4xMzcgMjU2IDE4OCAyNTZDMTg4IDE4Ni44NjMgMTQ1LjEzNyAxNDQgMTc2IDE0NEMxNDguNjI3IDE0NCAxMjggMTIzLjM3MyAxMjggOTZDMTUzLjM3MyA5NiAxNzYgNzMuMzcyNSAxNzYgNDhIMTA0QzEwNCA1NiAxODEuMzczIDY0IDk2IDY0WiIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC45Ii8+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkaWVudDBfbGluZWFyXzFfMSIgeDE9IjAiIHkxPSIwIiB4Mj0iMTkyIiB5Mj0iMTkyIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agc3RvcC1jb2xvcj0iIzY2N0VFQSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzc2NEJBMiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjwvc3ZnPg==">
+    
+    <!-- Performance Optimizations -->
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Stylesheets -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
+            --accent-gradient: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --glow-primary: 0 8px 32px rgba(102, 126, 234, 0.37);
+            --text-primary: #ffffff;
+            --text-secondary: #e5e7eb;
+            --bg-dark: #0f172a;
+            --bg-dark-secondary: #1e293b;
+            --sidebar-width: 280px;
+        }
+
+        [data-theme="light"] {
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --bg-dark: #ffffff;
+            --bg-dark-secondary: #f8fafc;
+            --glass-bg: rgba(0, 0, 0, 0.1);
+            --glass-border: rgba(0, 0, 0, 0.2);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            transition: all 0.3s ease;
+            overflow-x: hidden;
+        }
+
+        .gradient-bg {
+            background: var(--primary-gradient);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gradient-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .glass-effect {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glow-primary);
+            transition: all 0.3s ease;
+        }
+
+        .glass-effect:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--glow-primary), 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--bg-dark-secondary);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid var(--glass-border);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            z-index: 50;
+            overflow-y: auto;
+        }
+
+        .sidebar.closed {
+            transform: translateX(-100%);
+        }
+
+        .sidebar-header {
+            padding: 2rem 1.5rem 1rem;
+            border-bottom: 1px solid var(--glass-border);
+            background: var(--glass-bg);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 24px;
+            margin: 4px 12px;
+            border-radius: 12px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--primary-gradient);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-item:hover::before,
+        .nav-item.active::before {
+            opacity: 0.1;
+        }
+
+        .nav-item.active {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .nav-item:hover {
+            background: var(--glass-bg);
+            transform: translateX(4px);
+        }
+
+        .nav-item i {
+            font-size: 18px;
+            min-width: 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .nav-item span {
+            font-weight: 500;
+            position: relative;
+            z-index: 1;
+        }
+
+        .main-content {
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            transition: margin-left 0.3s ease;
+            padding-top: 80px;
+        }
+
+        .main-content.expanded {
+            margin-left: 0;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: var(--sidebar-width);
+            right: 0;
+            z-index: 40;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            transition: left 0.3s ease;
+        }
+
+        .header.expanded {
+            left: 0;
+        }
+
+        .stat-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary-gradient);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .stat-icon {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            font-size: 2.5rem;
+            opacity: 0.2;
+        }
+
+        .dashboard-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.15);
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-secondary {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-weight: 500;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .data-row {
+            padding: 1rem;
+            border-radius: 12px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .data-row:hover {
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateX(4px);
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-confirmed {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .status-pending {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+            border: 1px solid rgba(251, 191, 36, 0.3);
+        }
+
+        .status-completed {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            padding: 12px;
+            backdrop-filter: blur(20px);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .modal.active .modal-content {
+            transform: scale(1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            background: var(--glass-bg);
+            color: var(--text-primary);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 16px 20px;
+            z-index: 1000;
+            transform: translateX(400px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            max-width: 300px;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .notification.success {
+            border-left: 4px solid #10b981;
+        }
+
+        .notification.error {
+            border-left: 4px solid #ef4444;
+        }
+
+        .notification.info {
+            border-left: 4px solid #3b82f6;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--glass-bg);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary-gradient);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #3b82f6;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .header {
+                left: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stat-card {
+                padding: 1.5rem;
+            }
+            
+            .stat-value {
+                font-size: 2rem;
+            }
+            
+            .dashboard-card {
+                padding: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sidebar {
+                width: 100%;
+            }
+            
+            .modal-content {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Focus styles */
+        button:focus,
+        .nav-item:focus,
+        .form-input:focus {
+            outline: 2px solid #3b82f6;
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme" aria-label="Toggle theme">
+        <i class="fas fa-sun" id="theme-icon"></i>
+    </button>
+
+    <!-- Notification Container -->
+    <div id="notification" class="notification">
+        <div class="flex items-center gap-3">
+            <i class="fas fa-info-circle" id="notification-icon"></i>
+            <span id="notification-text">Notification message</span>
+            <button onclick="hideNotification()" class="ml-auto text-gray-400 hover:text-white">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header id="header" class="header gradient-bg py-4 px-6">
+        <div class="flex justify-between items-center relative z-10">
+            <div class="flex items-center space-x-4">
+                <button id="sidebar-toggle" class="lg:hidden p-2 rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+                <h1 class="text-2xl font-bold">
+                    <i class="fas fa-motorcycle mr-2"></i>
+                    Dealer Dashboard
+                </h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="glass-effect px-4 py-2 rounded-full">
+                    <span id="current-time" class="text-sm"></span>
+                </div>
+                <div class="glass-effect px-4 py-2 rounded-full">
+                    <i class="fas fa-user mr-2"></i>
+                    <span>Manager</span>
+                </div>
+                <div class="glass-effect px-4 py-2 rounded-full">
+                    <i id="connection-status" class="fas fa-circle text-green-400 mr-2"></i>
+                    <span class="text-sm">Online</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="sidebar">
+            <div class="sidebar-header">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                        <i class="fas fa-motorcycle text-white"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold">EveryLingua</h3>
+                        <p class="text-sm text-gray-400">Admin Panel</p>
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="py-6">
+                <a href="#" class="nav-item active" data-page="overview">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Overview</span>
+                </a>
+                <a href="#" class="nav-item" data-page="customers">
+                    <i class="fas fa-users"></i>
+                    <span>Customers</span>
+                </a>
+                <a href="#" class="nav-item" data-page="bookings">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Bookings</span>
+                </a>
+                <a href="#" class="nav-item" data-page="inventory">
+                    <i class="fas fa-motorcycle"></i>
+                    <span>Inventory</span>
+                </a>
+                <a href="#" class="nav-item" data-page="communications">
+                    <i class="fas fa-envelope"></i>
+                    <span>Communications</span>
+                </a>
+                <a href="#" class="nav-item" data-page="reports">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Reports</span>
+                </a>
+                <a href="#" class="nav-item" data-page="settings">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+            <div class="mt-8 pt-4 pb-8 border-t border-gray-700/50 mx-6 text-center">
+                <p class="text-xs text-gray-400 mb-2">24/7 IVR Support</p>
+                <a href="tel:+919876543210" class="inline-flex items-center justify-center text-sm font-semibold text-blue-400 hover:text-blue-300 transition-colors bg-blue-500/10 px-4 py-2 rounded-lg border border-blue-500/20 w-full">
+                    <i class="fas fa-phone-alt mr-2"></i>+91-9876543210
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main id="main-content" class="main-content p-6">
+            <!-- Overview Page -->
+            <div id="overview-page" class="dashboard-page">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-bold mb-2">Dashboard Overview</h2>
+                    <p class="text-gray-400">Welcome back! Here's what's happening with your dealership today.</p>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="stat-card">
+                        <div class="stat-value" id="total-customers">1,247</div>
+                        <div class="stat-label">Total Customers</div>
+                        <i class="fas fa-users stat-icon text-blue-400"></i>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 78%"></div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-value" id="today-bookings">23</div>
+                        <div class="stat-label">Today's Bookings</div>
+                        <i class="fas fa-calendar-day stat-icon text-green-400"></i>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 65%"></div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-value" id="pending-bookings">8</div>
+                        <div class="stat-label">Pending Bookings</div>
+                        <i class="fas fa-clock stat-icon text-yellow-400"></i>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 32%"></div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-value" id="total-revenue">â‚¹12.45L</div>
+                        <div class="stat-label">Monthly Revenue</div>
+                        <i class="fas fa-rupee-sign stat-icon text-purple-400"></i>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 89%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity Section -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="dashboard-card">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-xl font-semibold">Recent Bookings</h3>
+                            <button class="btn-secondary">
+                                <i class="fas fa-external-link-alt"></i>
+                                View All
+                            </button>
+                        </div>
+                        <div id="recent-bookings" class="space-y-3">
+                            <div class="data-row">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="font-medium">Test Ride - Classic 350</p>
+                                        <p class="text-sm text-gray-400">John Doe â€¢ 2:30 PM</p>
+                                    </div>
+                                    <span class="status-badge status-confirmed">Confirmed</span>
+                                </div>
+                            </div>
+                            <div class="data-row">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="font-medium">Service - Pulsar 220</p>
+                                        <p class="text-sm text-gray-400">Jane Smith â€¢ 4:00 PM</p>
+                                    </div>
+                                    <span class="status-badge status-pending">Pending</span>
+                                </div>
+                            </div>
+                            <div class="data-row">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="font-medium">Test Ride - Duke 390</p>
+                                        <p class="text-sm text-gray-400">Mike Johnson â€¢ 5:15 PM</p>
+                                    </div>
+                                    <span class="status-badge status-completed">Completed</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-xl font-semibold">Customer Activity</h3>
+                            <button class="btn-secondary">
+                                <i class="fas fa-refresh"></i>
+                                Refresh
+                            </button>
+                        </div>
+                        <div id="customer-activity" class="space-y-3">
+                            <div class="data-row">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-user-plus text-white text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium">New customer registered</p>
+                                        <p class="text-sm text-gray-400">Rajesh Kumar â€¢ 10 minutes ago</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="data-row">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-road text-white text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium">Test ride completed</p>
+                                        <p class="text-sm text-gray-400">Priya Sharma â€¢ 1 hour ago</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="data-row">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-wrench text-white text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium">Service appointment</p>
+                                        <p class="text-sm text-gray-400">David Wilson â€¢ 2 hours ago</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="mt-8">
+                    <h3 class="text-xl font-semibold mb-4">Quick Actions</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <button class="btn-primary justify-center" onclick="showAddCustomerModal()">
+                            <i class="fas fa-user-plus"></i>
+                            Add Customer
+                        </button>
+                        <button class="btn-primary justify-center" onclick="showInventoryModal()">
+                            <i class="fas fa-plus"></i>
+                            Add Inventory
+                        </button>
+                        <button class="btn-primary justify-center" onclick="exportData()">
+                            <i class="fas fa-download"></i>
+                            Export Data
+                        </button>
+                        <button class="btn-primary justify-center" onclick="sendBulkMessage()">
+                            <i class="fas fa-paper-plane"></i>
+                            Send Message
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Other pages would go here with similar enhanced styling -->
+            <!-- Customers Page -->
+            <div id="customers-page" class="dashboard-page hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h2 class="text-3xl font-bold mb-2">Customer Management</h2>
+                        <p class="text-gray-400">Manage your customer database and relationships</p>
+                    </div>
+                    <button id="add-customer-btn" class="btn-primary">
+                        <i class="fas fa-plus"></i>
+                        Add Customer
+                    </button>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="mb-4">
+                        <div class="flex flex-col md:flex-row gap-4">
+                            <input type="text" id="customer-search" placeholder="Search customers..."
+                                   class="form-input flex-1">
+                            <select class="form-input md:w-48">
+                                <option>All Customers</option>
+                                <option>Active</option>
+                                <option>Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="customers-list" class="space-y-3">
+                        <div class="data-row">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                                        <span class="text-white font-semibold">JD</span>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-medium">John Doe</h4>
+                                        <p class="text-sm text-gray-400">+91-9876543210 â€¢ john@example.com</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <span class="status-badge status-confirmed">Active</span>
+                                    <button class="btn-secondary py-1 px-3">
+                                        <i class="fas fa-edit"></i>
+                                        Edit
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Similar enhanced styling would be applied to other pages -->
+            <div id="bookings-page" class="dashboard-page hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h2 class="text-3xl font-bold mb-2">Booking Management</h2>
+                        <p class="text-gray-400">Track and manage all customer bookings</p>
+                    </div>
+                    <div class="flex gap-3">
+                        <select class="form-input">
+                            <option value="all">All Bookings</option>
+                            <option value="test_ride">Test Rides</option>
+                            <option value="service">Services</option>
+                            <option value="pending">Pending</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <div id="bookings-list" class="space-y-3">
+                        <!-- Enhanced booking items would go here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inventory Page -->
+            <div id="inventory-page" class="dashboard-page hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h2 class="text-3xl font-bold mb-2">Inventory Management</h2>
+                        <p class="text-gray-400">Manage your motorcycle inventory and stock levels</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="stat-card"><div class="stat-value" id="inv-total">0</div><div class="stat-label">Total Models</div><i class="fas fa-motorcycle stat-icon text-blue-400"></i></div>
+                    <div class="stat-card"><div class="stat-value" id="inv-instock">0</div><div class="stat-label">In Stock</div><i class="fas fa-check-circle stat-icon text-green-400"></i></div>
+                    <div class="stat-card"><div class="stat-value" id="inv-outstock">0</div><div class="stat-label">Out of Stock</div><i class="fas fa-times-circle stat-icon text-red-400"></i></div>
+                </div>
+                <div class="dashboard-card">
+                    <div id="inventory-list" class="space-y-3"></div>
+                </div>
+            </div>
+
+            <!-- Communications Page -->
+            <div id="communications-page" class="dashboard-page hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h2 class="text-3xl font-bold mb-2">Communication Center</h2>
+                        <p class="text-gray-400">Track all customer communications and send messages</p>
+                    </div>
+                    <button class="btn-primary" onclick="showComposeModal()"><i class="fas fa-plus"></i> Compose</button>
+                </div>
+                <div class="dashboard-card">
+                    <div id="communications-list" class="space-y-3"></div>
+                    <div id="comms-empty" class="text-center py-10 text-gray-400 hidden"><i class="fas fa-inbox text-4xl mb-3"></i><p>No communications yet</p></div>
+                </div>
+            </div>
+
+            <!-- Reports Page -->
+            <div id="reports-page" class="dashboard-page hidden">
+                <div class="mb-6">
+                    <h2 class="text-3xl font-bold mb-2">Reports & Analytics</h2>
+                    <p class="text-gray-400">Insights into your dealership performance</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div class="dashboard-card"><h3 class="text-lg font-semibold mb-4"><i class="fas fa-chart-pie mr-2 text-blue-400"></i>Bookings by Type</h3><div id="report-by-type" class="space-y-3"></div></div>
+                    <div class="dashboard-card"><h3 class="text-lg font-semibold mb-4"><i class="fas fa-chart-bar mr-2 text-green-400"></i>Bookings by Status</h3><div id="report-by-status" class="space-y-3"></div></div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div class="dashboard-card"><h3 class="text-lg font-semibold mb-4"><i class="fas fa-trophy mr-2 text-yellow-400"></i>Top Bikes</h3><div id="report-top-bikes" class="space-y-3"></div></div>
+                    <div class="dashboard-card"><h3 class="text-lg font-semibold mb-4"><i class="fas fa-users mr-2 text-purple-400"></i>Customers by Status</h3><div id="report-cust-status" class="space-y-3"></div></div>
+                </div>
+                <div class="dashboard-card"><h3 class="text-lg font-semibold mb-4"><i class="fas fa-chart-line mr-2 text-cyan-400"></i>Monthly Booking Trends</h3><div id="report-monthly" class="flex items-end gap-2" style="height:200px"></div></div>
+            </div>
+
+            <!-- Settings Page -->
+            <div id="settings-page" class="dashboard-page hidden">
+                <div class="mb-6">
+                    <h2 class="text-3xl font-bold mb-2">Settings</h2>
+                    <p class="text-gray-400">Configure your dealership preferences</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="dashboard-card">
+                        <h3 class="text-xl font-semibold mb-4"><i class="fas fa-building mr-2"></i>Dealership Profile</h3>
+                        <form id="settings-form">
+                            <div class="form-group"><label class="form-label">Dealership Name</label><input type="text" id="set-name" class="form-input"></div>
+                            <div class="form-group"><label class="form-label">Address</label><input type="text" id="set-address" class="form-input"></div>
+                            <div class="form-group"><label class="form-label">Phone</label><input type="text" id="set-phone" class="form-input"></div>
+                            <div class="form-group"><label class="form-label">Email</label><input type="email" id="set-email" class="form-input"></div>
+                            <div class="form-group"><label class="form-label">Working Hours</label><input type="text" id="set-hours" class="form-input"></div>
+                            <button type="submit" class="btn-primary w-full justify-center"><i class="fas fa-save"></i> Save Settings</button>
+                        </form>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3 class="text-xl font-semibold mb-4"><i class="fas fa-bell mr-2"></i>Notifications</h3>
+                        <div class="space-y-4">
+                            <label class="flex items-center justify-between p-3 rounded-lg" style="background:var(--glass-bg)"><span>Email Notifications</span><input type="checkbox" id="set-notif-email" checked class="w-5 h-5 accent-blue-500"></label>
+                            <label class="flex items-center justify-between p-3 rounded-lg" style="background:var(--glass-bg)"><span>SMS Notifications</span><input type="checkbox" id="set-notif-sms" checked class="w-5 h-5 accent-blue-500"></label>
+                            <label class="flex items-center justify-between p-3 rounded-lg" style="background:var(--glass-bg)"><span>Booking Alerts</span><input type="checkbox" id="set-notif-booking" checked class="w-5 h-5 accent-blue-500"></label>
+                            <label class="flex items-center justify-between p-3 rounded-lg" style="background:var(--glass-bg)"><span>Auto Follow-up</span><input type="checkbox" id="set-auto-followup" checked class="w-5 h-5 accent-blue-500"></label>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-4 mt-6"><i class="fas fa-download mr-2"></i>Data Management</h3>
+                        <div class="space-y-3">
+                            <button class="btn-secondary w-full justify-center" onclick="exportData('customers')"><i class="fas fa-file-csv"></i> Export Customers CSV</button>
+                            <button class="btn-secondary w-full justify-center" onclick="exportData('bookings')"><i class="fas fa-file-csv"></i> Export Bookings CSV</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add Customer Modal -->
+    <div id="add-customer-modal" class="modal">
+        <div class="modal-content">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-2xl font-semibold">Add New Customer</h3>
+                <button onclick="hideAddCustomerModal()" class="text-gray-400 hover:text-white">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <form id="add-customer-form">
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" id="customer-name" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Phone Number</label>
+                    <input type="text" id="customer-phone" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" id="customer-email" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">City</label>
+                    <input type="text" id="customer-city" class="form-input">
+                </div>
+                <div class="flex justify-end gap-3 mt-6">
+                    <button type="button" onclick="hideAddCustomerModal()" class="btn-secondary">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-plus"></i>
+                        Add Customer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Compose Message Modal -->
+    <div id="compose-modal" class="modal">
+        <div class="modal-content">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-2xl font-semibold">Compose Message</h3>
+                <button onclick="hideComposeModal()" class="text-gray-400 hover:text-white"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <form id="compose-form">
+                <div class="form-group"><label class="form-label">Customer</label><select id="compose-customer" class="form-input" required><option value="">Select Customer</option></select></div>
+                <div class="form-group"><label class="form-label">Type</label><select id="compose-type" class="form-input"><option value="email">Email</option><option value="sms">SMS</option></select></div>
+                <div class="form-group"><label class="form-label">Subject</label><input type="text" id="compose-subject" class="form-input"></div>
+                <div class="form-group"><label class="form-label">Message</label><textarea id="compose-message" class="form-input" rows="4" required></textarea></div>
+                <div class="flex justify-end gap-3 mt-6">
+                    <button type="button" onclick="hideComposeModal()" class="btn-secondary">Cancel</button>
+                    <button type="submit" class="btn-primary"><i class="fas fa-paper-plane"></i> Send</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bulk Message Modal -->
+    <div id="bulk-modal" class="modal">
+        <div class="modal-content">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-2xl font-semibold">Send Bulk Message</h3>
+                <button onclick="hideBulkModal()" class="text-gray-400 hover:text-white"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <form id="bulk-form">
+                <div class="form-group"><label class="form-label">Segment</label><select id="bulk-segment" class="form-input"><option value="all">All Customers</option><option value="new">New</option><option value="interested">Interested</option><option value="contacted">Contacted</option><option value="purchased">Purchased</option></select></div>
+                <div class="form-group"><label class="form-label">Type</label><select id="bulk-type" class="form-input"><option value="email">Email</option><option value="sms">SMS</option></select></div>
+                <div class="form-group"><label class="form-label">Subject</label><input type="text" id="bulk-subject" class="form-input"></div>
+                <div class="form-group"><label class="form-label">Message</label><textarea id="bulk-message" class="form-input" rows="4" required></textarea></div>
+                <div class="flex justify-end gap-3 mt-6">
+                    <button type="button" onclick="hideBulkModal()" class="btn-secondary">Cancel</button>
+                    <button type="submit" class="btn-primary"><i class="fas fa-paper-plane"></i> Send to All</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API = (url, opts) => fetch(url, opts).then(r => r.json());
+        const statusColors = {confirmed:'status-pending',completed:'status-completed',cancelled:'status-badge',pending:'status-pending',sent:'status-confirmed',delivered:'status-completed',failed:'status-badge'};
+        const statusLabel = s => s ? s.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase()) : 'N/A';
+
+        class DealerDashboard {
+            constructor() {
+                this.currentPage = 'overview';
+                this.theme = localStorage.getItem('theme') || 'dark';
+                this.init();
+            }
+            init() {
+                this.setupNav();
+                this.setupForms();
+                this.updateTime();
+                this.applyTheme();
+                this.loadDashboardData();
+                setInterval(() => this.updateTime(), 1000);
+            }
+            setupNav() {
+                document.querySelectorAll('.nav-item').forEach(link => {
+                    link.addEventListener('click', e => { e.preventDefault(); this.showPage(e.currentTarget.dataset.page); });
+                });
+                document.getElementById('sidebar-toggle').addEventListener('click', () => this.toggleSidebar());
+                document.getElementById('add-customer-btn').addEventListener('click', () => this.showAddCustomerModal());
+                document.getElementById('add-customer-modal').addEventListener('click', e => { if(e.target===e.currentTarget) this.hideAddCustomerModal(); });
+                document.getElementById('compose-modal').addEventListener('click', e => { if(e.target===e.currentTarget) hideComposeModal(); });
+                document.getElementById('bulk-modal').addEventListener('click', e => { if(e.target===e.currentTarget) hideBulkModal(); });
+                document.addEventListener('keydown', e => { if(e.key==='Escape') { this.hideAddCustomerModal(); hideComposeModal(); hideBulkModal(); } });
+            }
+            setupForms() {
+                document.getElementById('add-customer-form').addEventListener('submit', e => { e.preventDefault(); this.addCustomer(); });
+                document.getElementById('compose-form').addEventListener('submit', e => { e.preventDefault(); this.sendMessage(); });
+                document.getElementById('bulk-form').addEventListener('submit', e => { e.preventDefault(); this.sendBulk(); });
+                document.getElementById('settings-form').addEventListener('submit', e => { e.preventDefault(); this.saveSettings(); });
+                const cs = document.getElementById('customer-search');
+                if(cs) cs.addEventListener('input', () => this.loadCustomers(cs.value));
+            }
+            showPage(p) {
+                document.querySelectorAll('.dashboard-page').forEach(pg => pg.classList.add('hidden'));
+                document.querySelectorAll('.nav-item').forEach(l => l.classList.remove('active'));
+                document.getElementById(`${p}-page`).classList.remove('hidden');
+                document.querySelector(`[data-page="${p}"]`).classList.add('active');
+                this.currentPage = p;
+                this.loadPageData(p);
+            }
+            toggleSidebar() {
+                document.getElementById('sidebar').classList.toggle('open');
+                document.getElementById('main-content').classList.toggle('expanded');
+                document.getElementById('header').classList.toggle('expanded');
+            }
+            updateTime() {
+                const el = document.getElementById('current-time');
+                if(el) el.textContent = new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit',timeZone:'Asia/Kolkata'});
+            }
+            applyTheme() {
+                document.documentElement.setAttribute('data-theme', this.theme);
+                const icon = document.getElementById('theme-icon');
+                if(icon) icon.className = this.theme==='dark'?'fas fa-sun':'fas fa-moon';
+            }
+            showNotification(msg, type='info') {
+                const n=document.getElementById('notification'), ic=document.getElementById('notification-icon'), tx=document.getElementById('notification-text');
+                const icons={success:'fas fa-check-circle',error:'fas fa-exclamation-triangle',info:'fas fa-info-circle'};
+                ic.className=icons[type]||icons.info; tx.textContent=msg; n.className=`notification ${type} show`;
+                setTimeout(()=>n.classList.remove('show'),3000);
+            }
+            showAddCustomerModal() { document.getElementById('add-customer-modal').classList.add('active'); document.getElementById('customer-name').focus(); }
+            hideAddCustomerModal() { document.getElementById('add-customer-modal').classList.remove('active'); document.getElementById('add-customer-form').reset(); }
+
+            // === DATA LOADING ===
+            async loadDashboardData() {
+                try {
+                    const r = await API('/api/dealer/stats');
+                    if(r.success) {
+                        const d = r.data;
+                        document.getElementById('total-customers').textContent = d.total_customers.toLocaleString();
+                        document.getElementById('today-bookings').textContent = d.today_bookings;
+                        document.getElementById('pending-bookings').textContent = d.pending_bookings;
+                        document.getElementById('total-revenue').textContent = d.revenue_formatted;
+                    }
+                    this.loadRecentBookings();
+                    this.loadRecentActivity();
+                } catch(e) { console.error(e); }
+            }
+            async loadRecentBookings() {
+                try {
+                    const r = await API('/api/dealer/bookings');
+                    if(!r.success) return;
+                    const el = document.getElementById('recent-bookings');
+                    el.innerHTML = r.data.slice(0,5).map(b => `
+                        <div class="data-row"><div class="flex items-center justify-between">
+                            <div><p class="font-medium">${b.type==='test_ride'?'Test Ride':'Service'} - ${b.bike_model||b.service_type||'N/A'}</p>
+                            <p class="text-sm text-gray-400">${b.customer_name||'Unknown'} â€¢ ${b.date||''}</p></div>
+                            <span class="status-badge ${statusColors[b.status]||''}">${statusLabel(b.status)}</span>
+                        </div></div>`).join('');
+                } catch(e) {}
+            }
+            async loadRecentActivity() {
+                try {
+                    const r = await API('/api/dealer/communications');
+                    if(!r.success) return;
+                    const el = document.getElementById('customer-activity');
+                    const icons = {email:'fa-envelope',sms:'fa-sms',phone:'fa-phone',whatsapp:'fa-whatsapp'};
+                    const colors = {email:'bg-blue-500',sms:'bg-green-500',phone:'bg-purple-500',whatsapp:'bg-emerald-500'};
+                    el.innerHTML = r.data.slice(0,5).map(c => `
+                        <div class="data-row"><div class="flex items-center gap-3">
+                            <div class="w-8 h-8 ${colors[c.type]||'bg-gray-500'} rounded-full flex items-center justify-center">
+                                <i class="fas ${icons[c.type]||'fa-comment'} text-white text-sm"></i></div>
+                            <div><p class="font-medium">${c.subject||c.type.toUpperCase()+' message'}</p>
+                            <p class="text-sm text-gray-400">${c.customer_name||'Unknown'} â€¢ ${c.sent_date ? new Date(c.sent_date).toLocaleDateString() : ''}</p></div>
+                        </div></div>`).join('') || '<p class="text-center text-gray-400 py-4">No recent activity</p>';
+                } catch(e) {}
+            }
+            loadPageData(p) {
+                switch(p) {
+                    case 'customers': this.loadCustomers(); break;
+                    case 'bookings': this.loadBookings(); break;
+                    case 'inventory': this.loadInventory(); break;
+                    case 'communications': this.loadCommunications(); break;
+                    case 'reports': this.loadReports(); break;
+                    case 'settings': this.loadSettings(); break;
+                    case 'overview': this.loadDashboardData(); break;
+                }
+            }
+
+            // === CUSTOMERS ===
+            async loadCustomers(search='') {
+                try {
+                    const r = await API(`/api/dealer/customers?search=${encodeURIComponent(search)}`);
+                    if(!r.success) return;
+                    const el = document.getElementById('customers-list');
+                    el.innerHTML = r.data.map(c => `
+                        <div class="data-row" id="cust-${c.id}"><div class="flex items-center justify-between">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                                    <span class="text-white font-semibold">${c.name.split(' ').map(n=>n[0]).join('').slice(0,2)}</span></div>
+                                <div><h4 class="font-medium">${c.name}</h4>
+                                <p class="text-sm text-gray-400">${c.phone} ${c.email?'â€¢ '+c.email:''}</p>
+                                <p class="text-xs text-gray-500">${c.city||''} ${c.notes?'â€¢ '+c.notes:''}</p></div></div>
+                            <div class="flex items-center gap-3">
+                                <span class="status-badge ${c.status==='purchased'?'status-completed':c.status==='new'?'status-pending':'status-confirmed'}">${statusLabel(c.status)}</span>
+                                <button class="btn-secondary py-1 px-3" onclick="dashboard.deleteCustomer('${c.id}')"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div></div>`).join('') || '<p class="text-center text-gray-400 py-8">No customers found</p>';
+                } catch(e) { console.error(e); }
+            }
+            async addCustomer() {
+                const data = {name:document.getElementById('customer-name').value,phone:document.getElementById('customer-phone').value,
+                    email:document.getElementById('customer-email').value,city:document.getElementById('customer-city').value};
+                if(!data.name||!data.phone) return this.showNotification('Name and phone required','error');
+                try {
+                    const r = await API('/api/dealer/customers',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+                    if(r.success) { this.showNotification('Customer added!','success'); this.hideAddCustomerModal(); this.loadCustomers(); this.loadDashboardData(); }
+                    else this.showNotification(r.error||'Failed','error');
+                } catch(e) { this.showNotification('Error adding customer','error'); }
+            }
+            async deleteCustomer(id) {
+                if(!confirm('Delete this customer?')) return;
+                try {
+                    const r = await API(`/api/dealer/customers/${id}`,{method:'DELETE'});
+                    if(r.success) { this.showNotification('Customer deleted','success'); this.loadCustomers(); this.loadDashboardData(); }
+                } catch(e) { this.showNotification('Error','error'); }
+            }
+
+            // === BOOKINGS ===
+            async loadBookings() {
+                try {
+                    const r = await API('/api/dealer/bookings');
+                    if(!r.success) return;
+                    const el = document.getElementById('bookings-list');
+                    el.innerHTML = r.data.map(b => `
+                        <div class="data-row"><div class="flex items-center justify-between flex-wrap gap-3">
+                            <div class="flex-1"><p class="font-medium">${b.type==='test_ride'?'ðŸ Test Ride':'ðŸ”§ Service'} - ${b.bike_model||'N/A'}</p>
+                            <p class="text-sm text-gray-400">${b.customer_name||'Unknown'} â€¢ ${b.customer_phone||''} â€¢ ${b.date||''}</p>
+                            ${b.service_type?`<p class="text-xs text-gray-500">Service: ${b.service_type}</p>`:''}
+                            ${b.notes?`<p class="text-xs text-gray-500">Note: ${b.notes}</p>`:''}</div>
+                            <div class="flex items-center gap-2">
+                                <span class="status-badge ${statusColors[b.status]||''}">${statusLabel(b.status)}</span>
+                                ${b.status==='confirmed'?`<button class="btn-primary py-1 px-3 text-xs" onclick="dashboard.updateBooking('${b.id}','completed')"><i class="fas fa-check"></i> Complete</button>
+                                <button class="btn-secondary py-1 px-3 text-xs" onclick="dashboard.updateBooking('${b.id}','cancelled')"><i class="fas fa-times"></i> Cancel</button>`:''}
+                            </div>
+                        </div></div>`).join('') || '<p class="text-center text-gray-400 py-8">No bookings found</p>';
+                } catch(e) { console.error(e); }
+            }
+            async updateBooking(id, status) {
+                try {
+                    const r = await API(`/api/dealer/bookings/${id}`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({status})});
+                    if(r.success) { this.showNotification(`Booking ${status}!`,'success'); this.loadBookings(); this.loadDashboardData(); }
+                } catch(e) { this.showNotification('Error','error'); }
+            }
+
+            // === INVENTORY ===
+            async loadInventory() {
+                try {
+                    const r = await API('/api/dealer/inventory');
+                    if(!r.success) return;
+                    const bikes = r.data;
+                    document.getElementById('inv-total').textContent = bikes.length;
+                    document.getElementById('inv-instock').textContent = bikes.filter(b=>b.in_stock).length;
+                    document.getElementById('inv-outstock').textContent = bikes.filter(b=>!b.in_stock).length;
+                    document.getElementById('inventory-list').innerHTML = bikes.map(b => `
+                        <div class="data-row"><div class="flex items-center justify-between flex-wrap gap-3">
+                            <div class="flex items-center gap-4">
+                                <div class="w-14 h-14 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center">
+                                    <i class="fas fa-motorcycle text-white text-xl"></i></div>
+                                <div><h4 class="font-medium">${b.brand} ${b.name}</h4>
+                                <p class="text-sm text-gray-400">${b.engine_cc}cc â€¢ ${b.mileage} kmpl â€¢ â‚¹${(b.price||0).toLocaleString()}</p>
+                                <p class="text-xs text-gray-500">${b.category} â€¢ Colors: ${(b.colors||[]).join(', ')}</p></div></div>
+                            <div class="flex items-center gap-3">
+                                <span class="status-badge ${b.in_stock?'status-confirmed':'status-badge'}" style="${b.in_stock?'':'background:rgba(239,68,68,0.2);color:#ef4444;border:1px solid rgba(239,68,68,0.3)'}">${b.in_stock?'In Stock':'Out of Stock'}</span>
+                            </div>
+                        </div></div>`).join('');
+                } catch(e) { console.error(e); }
+            }
+
+            // === COMMUNICATIONS ===
+            async loadCommunications() {
+                try {
+                    const r = await API('/api/dealer/communications');
+                    if(!r.success) return;
+                    const el = document.getElementById('communications-list');
+                    const empty = document.getElementById('comms-empty');
+                    if(!r.data.length) { el.innerHTML=''; empty.classList.remove('hidden'); return; }
+                    empty.classList.add('hidden');
+                    const icons = {email:'fa-envelope',sms:'fa-sms',phone:'fa-phone',whatsapp:'fa-whatsapp'};
+                    el.innerHTML = r.data.map(c => `
+                        <div class="data-row"><div class="flex items-center justify-between flex-wrap gap-2">
+                            <div class="flex items-center gap-3">
+                                <i class="fas ${icons[c.type]||'fa-comment'} text-blue-400"></i>
+                                <div><p class="font-medium">${c.subject||c.type.toUpperCase()+' Message'}</p>
+                                <p class="text-sm text-gray-400">To: ${c.customer_name||'Unknown'} â€¢ ${c.sent_date?new Date(c.sent_date).toLocaleString():''}</p>
+                                <p class="text-xs text-gray-500 mt-1">${(c.message||'').slice(0,100)}${(c.message||'').length>100?'...':''}</p></div></div>
+                            <span class="status-badge ${statusColors[c.status]||'status-confirmed'}">${statusLabel(c.status)}</span>
+                        </div></div>`).join('');
+                    // populate compose dropdown
+                    const cr = await API('/api/dealer/customers');
+                    if(cr.success) {
+                        const sel = document.getElementById('compose-customer');
+                        sel.innerHTML = '<option value="">Select Customer</option>' + cr.data.map(c=>`<option value="${c.id}">${c.name} (${c.phone})</option>`).join('');
+                    }
+                } catch(e) { console.error(e); }
+            }
+            async sendMessage() {
+                const data = {customer_id:document.getElementById('compose-customer').value,type:document.getElementById('compose-type').value,
+                    subject:document.getElementById('compose-subject').value,message:document.getElementById('compose-message').value};
+                try {
+                    const r = await API('/api/dealer/communications/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+                    if(r.success) { this.showNotification('Message sent!','success'); hideComposeModal(); this.loadCommunications(); }
+                    else this.showNotification(r.error||'Failed','error');
+                } catch(e) { this.showNotification('Error','error'); }
+            }
+            async sendBulk() {
+                const data = {segment:document.getElementById('bulk-segment').value,type:document.getElementById('bulk-type').value,
+                    subject:document.getElementById('bulk-subject').value,message:document.getElementById('bulk-message').value};
+                try {
+                    const r = await API('/api/dealer/communications/bulk',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+                    if(r.success) { this.showNotification(r.message,'success'); hideBulkModal(); this.loadCommunications(); }
+                    else this.showNotification(r.error||'Failed','error');
+                } catch(e) { this.showNotification('Error','error'); }
+            }
+
+            // === REPORTS ===
+            async loadReports() {
+                try {
+                    const r = await API('/api/dealer/reports');
+                    if(!r.success) return;
+                    const d = r.data;
+                    const bar = (label, val, max, color) => `<div class="data-row"><div class="flex items-center justify-between mb-1"><span>${label}</span><span class="font-semibold">${val}</span></div><div class="progress-bar"><div class="progress-fill" style="width:${max?Math.round(val/max*100):0}%;background:${color}"></div></div></div>`;
+                    // By type
+                    const btTotal = Object.values(d.bookings_by_type||{}).reduce((a,b)=>a+b,0)||1;
+                    document.getElementById('report-by-type').innerHTML = Object.entries(d.bookings_by_type||{}).map(([k,v])=>bar(statusLabel(k),v,btTotal,'linear-gradient(135deg,#667eea,#764ba2)')).join('')||'<p class="text-gray-400">No data</p>';
+                    // By status
+                    const bsTotal = Object.values(d.bookings_by_status||{}).reduce((a,b)=>a+b,0)||1;
+                    const sc = {confirmed:'#fbbf24',completed:'#22c55e',cancelled:'#ef4444'};
+                    document.getElementById('report-by-status').innerHTML = Object.entries(d.bookings_by_status||{}).map(([k,v])=>bar(statusLabel(k),v,bsTotal,sc[k]||'#3b82f6')).join('')||'<p class="text-gray-400">No data</p>';
+                    // Top bikes
+                    const tbMax = (d.top_bikes||[])[0]?.count||1;
+                    document.getElementById('report-top-bikes').innerHTML = (d.top_bikes||[]).map(b=>bar(b.model,b.count,tbMax,'linear-gradient(135deg,#f59e0b,#ef4444)')).join('')||'<p class="text-gray-400">No data</p>';
+                    // Customers by status
+                    const csTotal = Object.values(d.customers_by_status||{}).reduce((a,b)=>a+b,0)||1;
+                    document.getElementById('report-cust-status').innerHTML = Object.entries(d.customers_by_status||{}).map(([k,v])=>bar(statusLabel(k),v,csTotal,'linear-gradient(135deg,#8b5cf6,#ec4899)')).join('')||'<p class="text-gray-400">No data</p>';
+                    // Monthly trends (bar chart)
+                    const mMax = Math.max(...(d.monthly_trends||[]).map(m=>m.bookings),1);
+                    document.getElementById('report-monthly').innerHTML = (d.monthly_trends||[]).map(m=>`
+                        <div class="flex-1 flex flex-col items-center gap-1">
+                            <span class="text-xs font-semibold">${m.bookings}</span>
+                            <div style="width:100%;height:${Math.round(m.bookings/mMax*150)}px;background:linear-gradient(180deg,#667eea,#764ba2);border-radius:8px 8px 0 0;min-height:4px;transition:height 0.5s"></div>
+                            <span class="text-xs text-gray-400">${m.month.split(' ')[0]}</span>
+                        </div>`).join('');
+                } catch(e) { console.error(e); }
+            }
+
+            // === SETTINGS ===
+            async loadSettings() {
+                try {
+                    const r = await API('/api/dealer/settings');
+                    if(!r.success) return;
+                    const s = r.data;
+                    document.getElementById('set-name').value = s.dealership_name||'';
+                    document.getElementById('set-address').value = s.address||'';
+                    document.getElementById('set-phone').value = s.phone||'';
+                    document.getElementById('set-email').value = s.email||'';
+                    document.getElementById('set-hours').value = s.working_hours||'';
+                    document.getElementById('set-notif-email').checked = s.notification_email==='true';
+                    document.getElementById('set-notif-sms').checked = s.notification_sms==='true';
+                    document.getElementById('set-notif-booking').checked = s.notification_booking==='true';
+                    document.getElementById('set-auto-followup').checked = s.auto_followup==='true';
+                } catch(e) { console.error(e); }
+            }
+            async saveSettings() {
+                const data = {dealership_name:document.getElementById('set-name').value,address:document.getElementById('set-address').value,
+                    phone:document.getElementById('set-phone').value,email:document.getElementById('set-email').value,
+                    working_hours:document.getElementById('set-hours').value,
+                    notification_email:document.getElementById('set-notif-email').checked.toString(),
+                    notification_sms:document.getElementById('set-notif-sms').checked.toString(),
+                    notification_booking:document.getElementById('set-notif-booking').checked.toString(),
+                    auto_followup:document.getElementById('set-auto-followup').checked.toString()};
+                try {
+                    const r = await API('/api/dealer/settings',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+                    this.showNotification(r.success?'Settings saved!':'Failed to save','success');
+                } catch(e) { this.showNotification('Error saving settings','error'); }
+            }
+        }
+
+        // Global functions
+        let dashboard;
+        function toggleTheme() { dashboard.theme = dashboard.theme==='dark'?'light':'dark'; localStorage.setItem('theme',dashboard.theme); dashboard.applyTheme(); }
+        function hideNotification() { document.getElementById('notification').classList.remove('show'); }
+        function showAddCustomerModal() { dashboard.showAddCustomerModal(); }
+        function hideAddCustomerModal() { dashboard.hideAddCustomerModal(); }
+        function showComposeModal() { dashboard.loadCommunications(); document.getElementById('compose-modal').classList.add('active'); }
+        function hideComposeModal() { document.getElementById('compose-modal').classList.remove('active'); document.getElementById('compose-form').reset(); }
+        function showBulkModal() { document.getElementById('bulk-modal').classList.add('active'); }
+        function hideBulkModal() { document.getElementById('bulk-modal').classList.remove('active'); document.getElementById('bulk-form').reset(); }
+        function showInventoryModal() { dashboard.showPage('inventory'); }
+        function exportData(type) {
+            if(!type) type = 'customers';
+            window.open(`/api/dealer/export?type=${type}`, '_blank');
+            dashboard.showNotification(`Exporting ${type} data...`, 'success');
+        }
+        function sendBulkMessage() { showBulkModal(); }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            dashboard = new DealerDashboard();
+            window.dashboardInstance = dashboard;
+        });
+        window.addEventListener('online', () => { dashboard?.showNotification('Connection restored','success'); });
+        window.addEventListener('offline', () => { dashboard?.showNotification('Connection lost','error'); });
+    </script>
+</body>
+</html>

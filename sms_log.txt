@@ -1,0 +1,13 @@
+2025-11-27 12:06:09.553400: SMS OTP 360281 sent to +91918925329304
+2025-11-27 12:09:01.276588: SMS OTP 231196 sent to +91918925329304
+2025-11-27 12:19:03.398439: SMS OTP 158990 sent to 8925329304
+2025-11-27 12:27:13.755414: SMS OTP 123456 for 8925329304 (not sent - no provider)
+2025-11-27 12:28:51.512222: SMS OTP 131015 for 8925329304 (not sent - no provider)
+2025-11-27 12:29:42.904987: SMS OTP 123456 for 8925329304 (not sent - no provider)
+2025-11-27 12:30:15.653767: SMS OTP 123456 for 8925329304 (not sent - no provider)
+2025-11-27 12:38:41.584064: SMS OTP 123456 for 8925329304 (not sent - no provider)
+2025-11-27 12:39:27.825134: SMS OTP 123456 for 8925329304 (not sent - no provider)
+2025-11-27 12:51:05.142329: SMS OTP 123456 for 8925329304 (not sent - no provider)
+2025-11-27 12:53:46.062643: SMS OTP 213820 for 8925329304 (not sent - no provider)
+2026-03-29 12:17:08.887878: Email OTP 352558 for matthw.lape@allwebemails.com (not sent - SMTP error: (535, b'5.7.8 Username and Password not accepted. For more information, go to\n5.7.8  https://support.google.com/mail/?p=BadCredentials 41be03b00d2f7-c76916ceaf1sm3154056a12.11 - gsmtp'))
+2026-03-29 12:21:26.775161: Email OTP 845875 for matthw.lape@allwebemails.com (not sent - SMTP error: (535, b'5.7.8 Username and Password not accepted. For more information, go to\n5.7.8  https://support.google.com/mail/?p=BadCredentials d2e1a72fcca58-82ca8464576sm3867018b3a.14 - gsmtp'))

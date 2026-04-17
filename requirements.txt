@@ -1,0 +1,57 @@
+# ============================================
+# EveryLingua AI - Requirements
+# Motorcycle Dealership Voice Assistant
+# ============================================
+
+# Flask Web Framework
+flask==3.0.0
+flask-cors==4.0.0
+gunicorn==21.2.0
+werkzeug==3.0.1
+
+# Environment & Configuration
+python-dotenv==1.0.1
+
+# HTTP & Network
+requests==2.31.0
+urllib3==2.2.1
+certifi==2024.2.2
+charset-normalizer==3.3.2
+
+# Google AI & APIs
+google-generativeai==0.5.4
+google-cloud-texttospeech==2.16.3
+googlemaps==4.10.0
+
+# Text-to-Speech
+gTTS==2.5.1
+
+# Speech Recognition & Translation
+SpeechRecognition==3.10.1
+deep-translator==1.11.4
+
+# Audio Playback (for voice assistant)
+pygame==2.5.2
+
+# HTML Parsing
+beautifulsoup4==4.12.3
+
+# Data Visualization (for workflow diagrams)
+matplotlib==3.8.2
+networkx==3.2.1
+pillow==10.2.0
+numpy==1.26.3
+
+# ============================================
+# Optional Dependencies (uncomment if needed)
+# ============================================
+
+# Twilio SMS (optional - for SMS OTP)
+twilio==8.13.0
+
+# PyAudio (optional - for microphone input)
+# Note: PyAudio requires system-level dependencies
+# On Windows: pip install pyaudio
+# On Linux: sudo apt-get install python3-pyaudio
+# On Mac: brew install portaudio && pip install pyaudio
+pyaudio==0.2.14

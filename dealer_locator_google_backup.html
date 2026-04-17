@@ -1,0 +1,1490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EveryLingua AI - Interactive Dealer Locator</title>
+    
+    <!-- PWA Configuration -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="EveryLingua AI">
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjE5MiIgaGVpZ2h0PSIxOTIiIHJ4PSIyNCIgZmlsbD0idXJsKCNncmFkaWVudDBfbGluZWFyXzFfMSkiLz48cGF0aCBkPSJNOTYgNjRDMjYuODYyOSA2NCAzMiAxMDYuODYzIDMyIDE3NkgxNjBDNjQgMjQwIDExOS4xMzcgMjU2IDE4OCAyNTZDMTg4IDE4Ni44NjMgMTQ1LjEzNyAxNDQgMTc2IDE0NEMxNDguNjI3IDE0NCAxMjggMTIzLjM3MyAxMjggOTZDMTUzLjM3MyA5NiAxNzYgNzMuMzcyNSAxNzYgNDhIMTA0QzEwNCA1NiAxODEuMzczIDY0IDk2IDY0WiIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC45Ii8+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkaWVudDBfbGluZWFyXzFfMSIgeDE9IjAiIHkxPSIwIiB4Mj0iMTkyIiB5Mj0iMTkyIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agc3RvcC1jb2xvcj0iIzY2N0VFQSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzc2NEJBMiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjwvc3ZnPg==">
+    
+    <!-- Performance Optimizations -->
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Stylesheets -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
+            --accent-gradient: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --glow-primary: 0 8px 32px rgba(102, 126, 234, 0.37);
+            --text-primary: #ffffff;
+            --text-secondary: #e5e7eb;
+            --bg-dark: #0f172a;
+            --bg-dark-secondary: #1e293b;
+        }
+
+        [data-theme="light"] {
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --bg-dark: #ffffff;
+            --bg-dark-secondary: #f8fafc;
+            --glass-bg: rgba(0, 0, 0, 0.1);
+            --glass-border: rgba(0, 0, 0, 0.2);
+            --primary-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            transition: all 0.3s ease;
+            overflow-x: hidden;
+        }
+
+        .gradient-bg {
+            background: var(--primary-gradient);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gradient-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .glass-effect {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glow-primary);
+            transition: all 0.3s ease;
+        }
+
+        .glass-effect:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--glow-primary), 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glow-primary);
+            border-radius: 20px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+        }
+
+        .shadow-glow {
+            box-shadow: 0 8px 20px rgba(59,130,246,0.25), 0 0 0 1px rgba(255,255,255,0.06) inset;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease both;
+        }
+
+        .slide-up {
+            animation: slideUp 0.5s ease both;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0 }
+            to { opacity: 1 }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(12px) }
+            to { opacity: 1; transform: translateY(0) }
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: #fff;
+            border-radius: 12px;
+            padding: 12px 20px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-secondary {
+            background: var(--glass-bg);
+            color: var(--text-primary);
+            border-radius: 12px;
+            padding: 12px 20px;
+            border: 1px solid var(--glass-border);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.15);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(255,255,255,0.1);
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(16,185,129,0.15);
+            color: #34d399;
+            border: 1px solid rgba(16,185,129,0.25);
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            gap: 4px;
+        }
+
+        .badge.live {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+            border-color: rgba(239, 68, 68, 0.25);
+        }
+
+        .badge.live .pulse-dot {
+            width: 6px;
+            height: 6px;
+            background: #ef4444;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.2); }
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.3s ease;
+        }
+
+        .loading-content {
+            text-align: center;
+            padding: 2rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            box-shadow: var(--glow-primary);
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid var(--glass-border);
+            border-top: 4px solid #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .info-bar {
+            background: var(--bg-dark-secondary);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 1rem 0;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+            animation: pulse 2s infinite;
+        }
+
+        .ui-overlay {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            right: 1rem;
+            z-index: 30;
+            max-width: 420px;
+        }
+
+        .search-input {
+            width: 100%;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 12px 16px 12px 48px;
+            color: var(--text-primary);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .search-input::placeholder {
+            color: var(--text-secondary);
+            opacity: 0.7;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .quick-list {
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .quick-list::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .quick-list::-webkit-scrollbar-track {
+            background: var(--glass-bg);
+            border-radius: 2px;
+        }
+
+        .quick-list::-webkit-scrollbar-thumb {
+            background: var(--glass-border);
+            border-radius: 2px;
+        }
+
+        .dealer-item {
+            padding: 12px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .dealer-item:hover {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: #3b82f6;
+            transform: translateX(4px);
+        }
+
+        .dealer-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--text-primary);
+        }
+
+        .dealer-address {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .dealer-distance {
+            font-size: 0.75rem;
+            color: #3b82f6;
+            font-weight: 500;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            padding: 12px;
+            backdrop-filter: blur(20px);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 16px 20px;
+            z-index: 1000;
+            transform: translateX(400px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            max-width: 300px;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .notification.success {
+            border-left: 4px solid #10b981;
+        }
+
+        .notification.error {
+            border-left: 4px solid #ef4444;
+        }
+
+        .notification.info {
+            border-left: 4px solid #3b82f6;
+        }
+
+        .floating-controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 50;
+        }
+
+        .floating-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+        }
+
+        .floating-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .floating-btn.primary {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .floating-btn.secondary {
+            background: var(--glass-bg);
+            color: var(--text-primary);
+        }
+
+        /* Map container */
+        #map {
+            width: 100%;
+            height: 100%;
+            border-radius: 0;
+        }
+
+        /* Language selector */
+        .language-selector {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 6px 12px;
+            color: var(--text-primary);
+            backdrop-filter: blur(10px);
+            font-size: 0.875rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .ui-overlay {
+                left: 0.5rem;
+                right: 0.5rem;
+            }
+            
+            .glass-card {
+                padding: 1rem;
+                margin: 0.5rem;
+            }
+            
+            .floating-controls {
+                bottom: 10px;
+                right: 10px;
+            }
+            
+            .floating-btn {
+                width: 48px;
+                height: 48px;
+                font-size: 16px;
+            }
+            
+            .theme-toggle {
+                top: 10px;
+                right: 10px;
+                width: 45px;
+                height: 45px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .status-item {
+                font-size: 0.75rem;
+            }
+            
+            .btn-primary,
+            .btn-secondary {
+                padding: 10px 16px;
+                font-size: 0.875rem;
+            }
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Focus styles */
+        button:focus,
+        .search-input:focus,
+        .language-selector:focus {
+            outline: 2px solid #3b82f6;
+            outline-offset: 2px;
+        }
+
+        /* Custom Google Maps styles */
+        gmpx-store-locator {
+            width: 100%;
+            height: 100%;
+            --gmpx-color-surface: var(--bg-dark-secondary);
+            --gmpx-color-on-surface: var(--text-primary);
+            --gmpx-color-on-surface-variant: var(--text-secondary);
+            --gmpx-color-primary: #3b82f6;
+            --gmpx-color-outline: var(--glass-border);
+            --gmpx-fixed-panel-width-row-layout: 28.5em;
+            --gmpx-fixed-panel-height-column-layout: 65%;
+            --gmpx-font-family-base: "Inter", sans-serif;
+            --gmpx-font-family-headings: "Inter", sans-serif;
+            --gmpx-font-size-base: 0.875rem;
+            --gmpx-hours-color-open: #10b981;
+            --gmpx-hours-color-closed: #ef4444;
+            --gmpx-rating-color: #f59e0b;
+            --gmpx-rating-color-empty: var(--glass-border);
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme" aria-label="Toggle theme">
+        <i class="fas fa-sun" id="theme-icon"></i>
+    </button>
+
+    <!-- Notification Container -->
+    <div id="notification" class="notification">
+        <div class="flex items-center gap-3">
+            <i class="fas fa-info-circle" id="notification-icon"></i>
+            <span id="notification-text">Notification message</span>
+            <button onclick="hideNotification()" class="ml-auto text-gray-400 hover:text-white">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h3 class="text-lg font-semibold mb-2">Loading Dealer Locator</h3>
+            <p class="text-sm text-gray-400">Initializing interactive map and location services...</p>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="gradient-bg py-6 px-4 relative">
+        <div class="container mx-auto relative z-10">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="text-center md:text-left">
+                    <h1 class="text-3xl md:text-4xl font-bold mb-2">
+                        <i class="fas fa-map-marked-alt mr-3"></i>
+                        Dealer Locator
+                    </h1>
+                    <p class="text-lg opacity-90">Find EveryLingua Motors Dealerships Near You</p>
+                </div>
+                <div class="flex flex-wrap items-center gap-4">
+                    <div class="glass-effect px-4 py-2 rounded-full">
+                        <span id="current-language" class="text-sm">Language: English</span>
+                    </div>
+                    <a href="/" class="btn-primary">
+                        <i class="fas fa-home"></i>
+                        Voice Assistant
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Info Bar -->
+    <div class="info-bar">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-wrap justify-between items-center gap-4 text-sm">
+                <div class="flex flex-wrap items-center gap-6">
+                    <div class="status-item">
+                        <i class="fas fa-motorcycle text-blue-400"></i>
+                        <span>5 Bike Models Available</span>
+                    </div>
+                    <div class="status-item">
+                        <i class="fas fa-tools text-green-400"></i>
+                        <span>3 Service Packages</span>
+                    </div>
+                    <div class="status-item">
+                        <i class="fas fa-map-marker-alt text-red-400"></i>
+                        <span id="location-count">Loading Locations...</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="status-indicator">
+                        <div class="status-dot"></div>
+                        <span id="location-status" class="text-sm">Location Services Active</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="h-screen relative">
+        <div class="h-full flex flex-col">
+            <!-- Map Container -->
+            <div class="flex-1 relative">
+                <div id="map" style="width: 100%; height: 100%;"></div>
+
+                <!-- Enhanced UI Overlay -->
+                <div class="ui-overlay fade-in">
+                    <div class="glass-card shadow-glow p-4 md:p-5">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="badge live">
+                                    <div class="pulse-dot"></div>
+                                    <span>Live</span>
+                                </div>
+                                <span class="text-sm text-gray-300" id="overlay-lang">Language: English</span>
+                            </div>
+                            <button class="btn-secondary" onclick="makeServiceCenterCall()" title="Call Service Center">
+                                <i class="fas fa-phone text-green-400"></i>
+                                <span class="hidden sm:inline">Call</span>
+                            </button>
+                        </div>
+
+                        <div class="relative mb-4">
+                            <input id="searchDealers" 
+                                   placeholder="Search dealership or city..." 
+                                   class="search-input" 
+                                   autocomplete="off" />
+                            <i class="fas fa-search search-icon"></i>
+                        </div>
+
+                        <div id="quickList" class="quick-list space-y-2 mb-4" style="max-height: 300px; overflow-y: auto;">
+                            <!-- Dealer items will be populated dynamically from API -->
+                            <div class="dealer-item">
+                                <div class="dealer-name">Loading dealerships...</div>
+                                <div class="dealer-address">Please wait while we fetch all locations</div>
+                                <div class="dealer-distance">
+                                    <i class="fas fa-spinner fa-spin mr-1"></i>
+                                    Loading...
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                            <button class="btn-primary flex-1" onclick="updateUserLocation()" id="location-btn">
+                                <i class="fas fa-crosshairs"></i>
+                                <span>Use My Location</span>
+                            </button>
+                            <button class="btn-secondary flex-1" onclick="toggleVoice()" id="voice-btn">
+                                <i class="fas fa-microphone"></i>
+                                <span id="voiceToggleText">Start Voice</span>
+                            </button>
+                        </div>
+
+                        <!-- Language Selector -->
+                        <div class="mt-4 pt-4 border-t border-gray-600">
+                            <label class="block text-sm font-medium mb-2">Language Preference</label>
+                            <select class="language-selector w-full" id="language-select">
+                                <option value="en-US">English</option>
+                                <option value="hi-IN">हिंदी (Hindi)</option>
+                                <option value="mr-IN">मराठी (Marathi)</option>
+                                <option value="gu-IN">ગુજરાતી (Gujarati)</option>
+                                <option value="ta-IN">தமிழ் (Tamil)</option>
+                                <option value="te-IN">తెలుగు (Telugu)</option>
+                                <option value="kn-IN">ಕನ್ನಡ (Kannada)</option>
+                                <option value="bn-IN">বাংলা (Bengali)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Floating Controls -->
+    <div class="floating-controls">
+        <button class="floating-btn secondary" onclick="refreshLocation()" title="Refresh Location">
+            <i class="fas fa-sync-alt"></i>
+        </button>
+        <button class="floating-btn primary" onclick="centerMap()" title="Center Map">
+            <i class="fas fa-compress-arrows-alt"></i>
+        </button>
+        <button class="floating-btn secondary" onclick="toggleMapType()" title="Toggle Map Type">
+            <i class="fas fa-layer-group"></i>
+        </button>
+    </div>
+
+    <!-- Footer -->
+    <footer class="gradient-bg py-4 px-4 relative">
+        <div class="container mx-auto text-center relative z-10">
+            <p class="text-sm opacity-75 mb-2">
+                Powered by <strong>EveryLingua AI</strong> | Interactive Dealer Locator | Google Maps Integration
+            </p>
+            <div class="flex flex-wrap justify-center gap-4 text-xs opacity-60">
+                <span><i class="fas fa-shield-alt mr-1"></i>Secure Location</span>
+                <span><i class="fas fa-clock mr-1"></i>Real-time Updates</span>
+                <span><i class="fas fa-mobile-alt mr-1"></i>Mobile Optimized</span>
+                <span><i class="fas fa-globe mr-1"></i>Multi-language</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Enhanced Dealer Locator JavaScript
+        class DealerLocator {
+            constructor() {
+                this.map = null;
+                this.markers = [];
+                this.userLocation = null;
+                this.userLocationMarker = null;
+                this.currentLanguage = localStorage.getItem('preferredLanguage') || 'en-US';
+                this.theme = localStorage.getItem('theme') || 'dark';
+                this.mapType = 'roadmap';
+                this.isVoiceActive = false;
+                this.ivrSystem = null;
+                this.init();
+            }
+
+            async init() {
+                try {
+                    this.applyTheme();
+                    this.setupEventListeners();
+                    this.showNotification('Initializing map...', 'info');
+                    
+                    await this.loadGoogleMapsAPI();
+                    this.initializeMap();
+                    this.addDealerships();
+                    this.initializeIVR();
+                    this.hideLoading();
+                    
+                    this.showNotification('Dealer locator ready!', 'success');
+                } catch (error) {
+                    console.error('Error initializing dealer locator:', error);
+                    this.showError('Failed to load dealer locator. Please refresh the page.');
+                }
+            }
+
+            setupEventListeners() {
+                // Search functionality
+                const searchInput = document.getElementById('searchDealers');
+                searchInput.addEventListener('input', (e) => {
+                    this.searchDealers(e.target.value);
+                });
+
+                // Language selector
+                const languageSelect = document.getElementById('language-select');
+                languageSelect.value = this.currentLanguage;
+                languageSelect.addEventListener('change', (e) => {
+                    this.setLanguage(e.target.value);
+                });
+
+                // Keyboard shortcuts
+                document.addEventListener('keydown', (e) => {
+                    // Escape to clear search
+                    if (e.key === 'Escape') {
+                        searchInput.value = '';
+                        searchInput.blur();
+                    }
+                    
+                    // Ctrl/Cmd + F to focus search
+                    if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+                        e.preventDefault();
+                        searchInput.focus();
+                    }
+                });
+            }
+
+            loadGoogleMapsAPI() {
+                return new Promise((resolve, reject) => {
+                    if (window.google && window.google.maps) {
+                        resolve();
+                        return;
+                    }
+
+                    const script = document.createElement('script');
+                    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDJ_7J5jfhTyuwU9q4I3Y6_VBe9ODDWFhg&libraries=places,geometry`;
+                    script.async = true;
+                    script.defer = true;
+
+                    script.onload = () => resolve();
+                    script.onerror = () => reject(new Error('Failed to load Google Maps API'));
+
+                    document.head.appendChild(script);
+                });
+            }
+
+            initializeMap() {
+                const mapOptions = {
+                    center: { lat: 20.5937, lng: 78.9629 },
+                    zoom: 5,
+                    mapTypeControl: false,
+                    streetViewControl: true,
+                    fullscreenControl: true,
+                    zoomControl: true,
+                    mapTypeId: this.mapType,
+                    styles: this.getMapStyles()
+                };
+
+                this.map = new google.maps.Map(document.getElementById('map'), mapOptions);
+
+                // Add click listener
+                this.map.addListener('click', (event) => {
+                    this.addUserLocationMarker(event.latLng);
+                });
+
+                // Add idle listener for performance
+                this.map.addListener('idle', () => {
+                    this.updateVisibleDealerships();
+                });
+            }
+
+            getMapStyles() {
+                return this.theme === 'dark' ? [
+                    { elementType: "geometry", stylers: [{ color: "#212121" }] },
+                    { elementType: "labels.icon", stylers: [{ visibility: "off" }] },
+                    { elementType: "labels.text.fill", stylers: [{ color: "#757575" }] },
+                    { elementType: "labels.text.stroke", stylers: [{ color: "#212121" }] },
+                    {
+                        featureType: "administrative",
+                        elementType: "geometry",
+                        stylers: [{ color: "#757575" }]
+                    },
+                    {
+                        featureType: "administrative.country",
+                        elementType: "labels.text.fill",
+                        stylers: [{ color: "#9e9e9e" }]
+                    },
+                    {
+                        featureType: "poi",
+                        elementType: "labels.text.fill",
+                        stylers: [{ color: "#757575" }]
+                    },
+                    {
+                        featureType: "road",
+                        elementType: "geometry.fill",
+                        stylers: [{ color: "#2c2c2c" }]
+                    },
+                    {
+                        featureType: "road",
+                        elementType: "labels.text.fill",
+                        stylers: [{ color: "#8a8a8a" }]
+                    },
+                    {
+                        featureType: "water",
+                        elementType: "geometry",
+                        stylers: [{ color: "#000000" }]
+                    },
+                    {
+                        featureType: "water",
+                        elementType: "labels.text.fill",
+                        stylers: [{ color: "#3d3d3d" }]
+                    }
+                ] : [];
+            }
+
+            async addDealerships() {
+                // Fetch dealerships from API to get all locations
+                let dealerships = [];
+                try {
+                    const response = await fetch('/api/dealerships');
+                    const data = await response.json();
+                    if (data.success && data.data) {
+                        dealerships = data.data.map(dealer => ({
+                            name: dealer.name,
+                            address: `${dealer.address}, ${dealer.city}, ${dealer.state}`,
+                            phone: dealer.phone,
+                            position: { lat: dealer.latitude, lng: dealer.longitude },
+                            hours: `Mon-Fri: ${dealer.working_hours['monday-friday'] || '9:00 AM - 8:00 PM'}, Sat: ${dealer.working_hours['saturday'] || '9:00 AM - 9:00 PM'}, Sun: ${dealer.working_hours['sunday'] || '10:00 AM - 6:00 PM'}`,
+                            services: ["Sales", "Service", "Spare Parts", "Test Rides"],
+                            city: dealer.city
+                        }));
+                        // Update location count in header
+                        const locationCountEl = document.getElementById('location-count');
+                        if (locationCountEl) {
+                            locationCountEl.textContent = `${dealerships.length} Locations`;
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error fetching dealerships:', error);
+                    // Update location count for fallback
+                    const locationCountEl = document.getElementById('location-count');
+                    if (locationCountEl) {
+                        locationCountEl.textContent = '2 Locations';
+                    }
+                    // Fallback to default dealerships if API fails
+                    dealerships = [
+                        {
+                            name: "EveryLingua Motors - Mumbai Central",
+                            address: "123 MG Road, Mumbai Central, Mumbai, Maharashtra",
+                            phone: "+919876543210",
+                            position: { lat: 19.0760, lng: 72.8777 },
+                            hours: "Mon-Fri: 9:00 AM - 8:00 PM, Sat: 9:00 AM - 9:00 PM, Sun: 10:00 AM - 6:00 PM",
+                            services: ["Sales", "Service", "Spare Parts", "Test Rides"],
+                            city: "Mumbai"
+                        },
+                        {
+                            name: "EveryLingua Motors - Connaught Place",
+                            address: "45 Connaught Place, New Delhi, Delhi",
+                            phone: "+919876543211",
+                            position: { lat: 28.6139, lng: 77.2090 },
+                            hours: "Mon-Fri: 9:00 AM - 8:00 PM, Sat: 9:00 AM - 9:00 PM, Sun: 10:00 AM - 6:00 PM",
+                            services: ["Sales", "Service", "Spare Parts", "Test Rides"],
+                            city: "Delhi"
+                        }
+                    ];
+                }
+
+                dealerships.forEach((dealer, index) => {
+                    const marker = new google.maps.Marker({
+                        position: dealer.position,
+                        map: this.map,
+                        title: dealer.name,
+                        icon: {
+                            url: this.createCustomMarkerIcon('#3b82f6'),
+                            scaledSize: new google.maps.Size(40, 40),
+                            anchor: new google.maps.Point(20, 20)
+                        },
+                        animation: google.maps.Animation.DROP
+                    });
+
+                    const infoWindow = new google.maps.InfoWindow({
+                        content: this.createInfoWindowContent(dealer)
+                    });
+
+                    marker.addListener('click', () => {
+                        // Close other info windows
+                        this.markers.forEach(m => {
+                            if (m.infoWindow) {
+                                m.infoWindow.close();
+                            }
+                        });
+                        
+                        infoWindow.open(this.map, marker);
+                        this.map.panTo(dealer.position);
+                    });
+
+                    this.markers.push({
+                        marker,
+                        infoWindow,
+                        data: dealer
+                    });
+                });
+
+                this.updateDealerList();
+            }
+
+            createCustomMarkerIcon(color) {
+                return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
+                    <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="20" cy="20" r="18" fill="${color}" stroke="white" stroke-width="3"/>
+                        <text x="20" y="25" text-anchor="middle" fill="white" font-family="Arial" font-size="12" font-weight="bold">🏪</text>
+                    </svg>
+                `)}`;
+            }
+
+            createInfoWindowContent(dealer) {
+                const servicesHtml = dealer.services.map(service => 
+                    `<span class="inline-block bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs mr-1 mb-1">${service}</span>`
+                ).join('');
+
+                return `
+                    <div style="max-width: 280px; font-family: Inter, sans-serif; padding: 8px;">
+                        <h3 style="margin: 0 0 12px 0; color: #1f2937; font-size: 16px; font-weight: 600;">${dealer.name}</h3>
+                        
+                        <div style="margin-bottom: 8px;">
+                            <div style="display: flex; align-items: flex-start; gap: 6px; margin-bottom: 6px;">
+                                <i class="fas fa-map-marker-alt" style="color: #ef4444; margin-top: 2px;"></i>
+                                <span style="color: #4b5563; font-size: 14px; line-height: 1.4;">${dealer.address}</span>
+                            </div>
+                            
+                            <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+                                <i class="fas fa-phone" style="color: #10b981;"></i>
+                                <span style="color: #4b5563; font-size: 14px;">${dealer.phone}</span>
+                            </div>
+                            
+                            <div style="display: flex; align-items: flex-start; gap: 6px; margin-bottom: 8px;">
+                                <i class="fas fa-clock" style="color: #f59e0b; margin-top: 2px;"></i>
+                                <span style="color: #4b5563; font-size: 13px; line-height: 1.3;">${dealer.hours}</span>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 12px;">
+                            <p style="color: #6b7280; font-size: 12px; font-weight: 500; margin: 0 0 4px 0;">SERVICES:</p>
+                            <div>${servicesHtml}</div>
+                        </div>
+                        
+                        <div style="display: flex; gap: 8px;">
+                            <button onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${dealer.position.lat},${dealer.position.lng}', '_blank')"
+                                    style="background: #3b82f6; color: white; border: none; padding: 8px 12px; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; flex: 1;">
+                                <i class="fas fa-directions" style="margin-right: 4px;"></i>Directions
+                            </button>
+                            <button onclick="window.open('tel:${dealer.phone}', '_self')"
+                                    style="background: #10b981; color: white; border: none; padding: 8px 12px; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; flex: 1;">
+                                <i class="fas fa-phone" style="margin-right: 4px;"></i>Call
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            updateDealerList() {
+                const quickList = document.getElementById('quickList');
+                quickList.innerHTML = '';
+
+                this.markers.forEach(({ data: dealer }) => {
+                    const dealerItem = document.createElement('div');
+                    dealerItem.className = 'dealer-item';
+                    dealerItem.innerHTML = `
+                        <div class="dealer-name">${dealer.name}</div>
+                        <div class="dealer-address">${dealer.address}</div>
+                        <div class="dealer-distance">
+                            <i class="fas fa-map-marker-alt mr-1"></i>
+                            ${this.userLocation ? this.calculateDistance(dealer.position) : 'Enable location for distance'}
+                        </div>
+                    `;
+                    
+                    dealerItem.addEventListener('click', () => {
+                        this.focusOnDealer(dealer);
+                    });
+                    
+                    quickList.appendChild(dealerItem);
+                });
+            }
+
+            focusOnDealer(dealer) {
+                this.map.setCenter(dealer.position);
+                this.map.setZoom(15);
+                
+                // Find and click the marker
+                const markerData = this.markers.find(m => m.data === dealer);
+                if (markerData) {
+                    google.maps.event.trigger(markerData.marker, 'click');
+                }
+                
+                this.showNotification(`Focused on ${dealer.name}`, 'info');
+            }
+
+            calculateDistance(dealerPosition) {
+                if (!this.userLocation) return 'Location needed';
+                
+                const userLatLng = this.userLocation;
+                const dealerLatLng = new google.maps.LatLng(dealerPosition.lat, dealerPosition.lng);
+                const distance = google.maps.geometry.spherical.computeDistanceBetween(userLatLng, dealerLatLng);
+                const distanceKm = (distance / 1000).toFixed(1);
+                
+                return `${distanceKm} km away`;
+            }
+
+            searchDealers(query) {
+                if (!query.trim()) {
+                    this.updateDealerList();
+                    return;
+                }
+
+                const filteredDealers = this.markers.filter(({ data: dealer }) => {
+                    const searchText = `${dealer.name} ${dealer.address}`.toLowerCase();
+                    return searchText.includes(query.toLowerCase());
+                });
+
+                const quickList = document.getElementById('quickList');
+                quickList.innerHTML = '';
+
+                if (filteredDealers.length === 0) {
+                    quickList.innerHTML = `
+                        <div class="text-center py-4 text-gray-400">
+                            <i class="fas fa-search text-2xl mb-2"></i>
+                            <p>No dealers found matching "${query}"</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                filteredDealers.forEach(({ data: dealer }) => {
+                    const dealerItem = document.createElement('div');
+                    dealerItem.className = 'dealer-item';
+                    dealerItem.innerHTML = `
+                        <div class="dealer-name">${dealer.name}</div>
+                        <div class="dealer-address">${dealer.address}</div>
+                        <div class="dealer-distance">
+                            <i class="fas fa-map-marker-alt mr-1"></i>
+                            ${this.userLocation ? this.calculateDistance(dealer.position) : 'Enable location for distance'}
+                        </div>
+                    `;
+                    
+                    dealerItem.addEventListener('click', () => {
+                        this.focusOnDealer(dealer);
+                    });
+                    
+                    quickList.appendChild(dealerItem);
+                });
+            }
+
+            async updateUserLocation() {
+                try {
+                    this.showNotification('Getting your location...', 'info');
+                    const location = await this.getCurrentLocation();
+                    const latLng = new google.maps.LatLng(location.lat, location.lng);
+
+                    this.addUserLocationMarker(latLng);
+                    this.map.setCenter(latLng);
+                    this.map.setZoom(12);
+                    
+                    this.updateDealerList();
+                    this.showNotification('Location updated successfully!', 'success');
+                } catch (error) {
+                    console.error('Error getting location:', error);
+                    this.showNotification('Unable to access location. Please check permissions.', 'error');
+                    this.updateLocationStatus('Location access denied', 'warning');
+                }
+            }
+
+            getCurrentLocation() {
+                return new Promise((resolve, reject) => {
+                    if (!navigator.geolocation) {
+                        reject(new Error('Geolocation is not supported by this browser.'));
+                        return;
+                    }
+
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            resolve({
+                                lat: position.coords.latitude,
+                                lng: position.coords.longitude
+                            });
+                        },
+                        (error) => {
+                            reject(error);
+                        },
+                        {
+                            enableHighAccuracy: true,
+                            timeout: 10000,
+                            maximumAge: 300000
+                        }
+                    );
+                });
+            }
+
+            addUserLocationMarker(location) {
+                if (this.userLocationMarker) {
+                    this.userLocationMarker.setMap(null);
+                }
+
+                this.userLocationMarker = new google.maps.Marker({
+                    position: location,
+                    map: this.map,
+                    title: 'Your Location',
+                    icon: {
+                        url: this.createCustomMarkerIcon('#ef4444'),
+                        scaledSize: new google.maps.Size(30, 30),
+                        anchor: new google.maps.Point(15, 15)
+                    },
+                    animation: google.maps.Animation.BOUNCE
+                });
+
+                // Stop bouncing after 2 seconds
+                setTimeout(() => {
+                    this.userLocationMarker.setAnimation(null);
+                }, 2000);
+
+                this.userLocation = location;
+                this.updateLocationStatus(`Location: ${location.lat().toFixed(4)}, ${location.lng().toFixed(4)}`, 'success');
+            }
+
+            updateLocationStatus(message, type) {
+                const statusElement = document.getElementById('location-status');
+                if (statusElement) {
+                    statusElement.textContent = message;
+                }
+            }
+
+            setLanguage(language) {
+                this.currentLanguage = language;
+                localStorage.setItem('preferredLanguage', language);
+                
+                // Update display
+                document.getElementById('current-language').textContent = `Language: ${language}`;
+                document.getElementById('overlay-lang').textContent = `Language: ${language}`;
+                
+                // Update IVR system
+                if (this.ivrSystem) {
+                    this.ivrSystem.currentLanguage = language;
+                    if (this.ivrSystem.recognition) {
+                        this.ivrSystem.recognition.lang = language;
+                    }
+                }
+                
+                this.showNotification(`Language changed to ${language}`, 'success');
+            }
+
+            initializeIVR() {
+                // Initialize IVR system for voice commands
+                this.ivrSystem = new IVRSystem();
+            }
+
+            hideLoading() {
+                setTimeout(() => {
+                    const loadingOverlay = document.getElementById('loading-overlay');
+                    if (loadingOverlay) {
+                        loadingOverlay.style.opacity = '0';
+                        setTimeout(() => {
+                            loadingOverlay.remove();
+                        }, 300);
+                    }
+                }, 1000);
+            }
+
+            showError(message) {
+                this.showNotification(message, 'error');
+                this.hideLoading();
+            }
+
+            showNotification(message, type = 'info') {
+                const notification = document.getElementById('notification');
+                const icon = document.getElementById('notification-icon');
+                const text = document.getElementById('notification-text');
+
+                const icons = {
+                    success: 'fas fa-check-circle',
+                    error: 'fas fa-exclamation-triangle',
+                    info: 'fas fa-info-circle',
+                    warning: 'fas fa-exclamation-circle'
+                };
+
+                icon.className = icons[type] || icons.info;
+                text.textContent = message;
+                notification.className = `notification ${type} show`;
+
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 3000);
+            }
+
+            applyTheme() {
+                document.documentElement.setAttribute('data-theme', this.theme);
+                const icon = document.getElementById('theme-icon');
+                if (icon) {
+                    icon.className = this.theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+                }
+            }
+
+            updateVisibleDealerships() {
+                // Update dealer list based on current map view
+                // This could be enhanced to only show dealers in the current viewport
+            }
+        }
+
+        // IVR System class
+        class IVRSystem {
+            constructor() {
+                this.recognition = null;
+                this.synth = window.speechSynthesis;
+                this.isListening = false;
+                this.currentLanguage = localStorage.getItem('preferredLanguage') || 'en-US';
+                this.init();
+            }
+
+            async init() {
+                this.initializeSpeechRecognition();
+            }
+
+            initializeSpeechRecognition() {
+                if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                    console.warn('Speech recognition not supported');
+                    return;
+                }
+
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                this.recognition = new SpeechRecognition();
+                this.recognition.continuous = true;
+                this.recognition.interimResults = true;
+                this.recognition.lang = this.currentLanguage;
+
+                this.recognition.onstart = () => {
+                    this.isListening = true;
+                    this.updateVoiceButton(true);
+                };
+
+                this.recognition.onresult = (event) => {
+                    const transcript = Array.from(event.results)
+                        .map(result => result[0].transcript)
+                        .join('');
+                    this.processVoiceInput(transcript);
+                };
+
+                this.recognition.onerror = (event) => {
+                    console.error('Speech recognition error:', event.error);
+                    this.isListening = false;
+                    this.updateVoiceButton(false);
+                };
+
+                this.recognition.onend = () => {
+                    this.isListening = false;
+                    this.updateVoiceButton(false);
+                };
+            }
+
+            startListening() {
+                if (this.recognition && !this.isListening) {
+                    this.recognition.start();
+                }
+            }
+
+            stopListening() {
+                if (this.recognition && this.isListening) {
+                    this.recognition.stop();
+                }
+            }
+
+            updateVoiceButton(isActive) {
+                const voiceBtn = document.getElementById('voiceToggleText');
+                if (voiceBtn) {
+                    voiceBtn.textContent = isActive ? 'Stop Voice' : 'Start Voice';
+                }
+            }
+
+            async processVoiceInput(transcript) {
+                if (!transcript.trim()) return;
+
+                try {
+                    // Process voice commands for dealer locator
+                    const response = await this.processCommand(transcript);
+                    this.speakResponse(response);
+                } catch (error) {
+                    console.error('Error processing voice input:', error);
+                    this.speakResponse('Sorry, I encountered an error processing your request.');
+                }
+            }
+
+            async processCommand(command) {
+                // Simple command processing
+                const lowerCommand = command.toLowerCase();
+                
+                if (lowerCommand.includes('find') || lowerCommand.includes('locate') || lowerCommand.includes('dealer')) {
+                    return 'I can help you find dealerships. You can see the available locations on the map and in the list.';
+                } else if (lowerCommand.includes('direction') || lowerCommand.includes('navigate')) {
+                    return 'Click on any dealer marker to get directions to that location.';
+                } else if (lowerCommand.includes('call') || lowerCommand.includes('phone')) {
+                    return 'You can call any dealership by clicking the call button in their information window.';
+                } else {
+                    return 'I can help you find dealerships, get directions, or make calls. What would you like to do?';
+                }
+            }
+
+            speakResponse(text) {
+                if (this.synth.speaking) {
+                    this.synth.cancel();
+                }
+
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = this.currentLanguage;
+                utterance.rate = 0.9;
+                utterance.pitch = 1;
+                this.synth.speak(utterance);
+            }
+        }
+
+        // Global functions
+        function toggleTheme() {
+            const locator = window.dealerLocatorInstance;
+            locator.theme = locator.theme === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', locator.theme);
+            locator.applyTheme();
+            
+            // Update map styles
+            if (locator.map) {
+                locator.map.setOptions({ styles: locator.getMapStyles() });
+            }
+            
+            locator.showNotification(`Switched to ${locator.theme} theme`, 'success');
+        }
+
+        function hideNotification() {
+            document.getElementById('notification').classList.remove('show');
+        }
+
+        function makeServiceCenterCall() {
+            const phoneNumber = '+918925329304';
+            window.location.href = `tel:${phoneNumber}`;
+        }
+
+        function updateUserLocation() {
+            window.dealerLocatorInstance.updateUserLocation();
+        }
+
+        function toggleVoice() {
+            const locator = window.dealerLocatorInstance;
+            if (locator.ivrSystem) {
+                if (locator.ivrSystem.isListening) {
+                    locator.ivrSystem.stopListening();
+                } else {
+                    locator.ivrSystem.startListening();
+                }
+            }
+        }
+
+        function refreshLocation() {
+            window.dealerLocatorInstance.updateUserLocation();
+        }
+
+        function centerMap() {
+            const locator = window.dealerLocatorInstance;
+            if (locator.userLocation) {
+                locator.map.setCenter(locator.userLocation);
+                locator.map.setZoom(12);
+            } else {
+                locator.map.setCenter({ lat: 20.5937, lng: 78.9629 });
+                locator.map.setZoom(5);
+            }
+        }
+
+        function toggleMapType() {
+            const locator = window.dealerLocatorInstance;
+            const types = ['roadmap', 'satellite', 'hybrid', 'terrain'];
+            const currentIndex = types.indexOf(locator.mapType);
+            const nextIndex = (currentIndex + 1) % types.length;
+            
+            locator.mapType = types[nextIndex];
+            locator.map.setMapTypeId(locator.mapType);
+            
+            locator.showNotification(`Map type: ${locator.mapType}`, 'info');
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            window.dealerLocatorInstance = new DealerLocator();
+        });
+
+        // Handle online/offline status
+        window.addEventListener('online', () => {
+            window.dealerLocatorInstance.showNotification('Connection restored', 'success');
+        });
+
+        window.addEventListener('offline', () => {
+            window.dealerLocatorInstance.showNotification('Connection lost', 'error');
+        });
+    </script>
+</body>
+</html>

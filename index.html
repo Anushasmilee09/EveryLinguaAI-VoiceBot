@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EveryLingua AI - Motorcycle Dealership Voice Assistant</title>
+    
+    <!-- PWA Configuration -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="EveryLingua AI">
+    
+    <!-- Stylesheets -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --glow-primary: 0 8px 32px rgba(102, 126, 234, 0.37);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            background: #0f172a;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+        }
+
+        .gradient-bg {
+            background: var(--primary-gradient);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gradient-bg::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .glass-effect {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glow-primary);
+        }
+
+        .enhanced-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2rem;
+            transition: all 0.4s ease;
+        }
+
+        .enhanced-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 16px;
+            padding: 16px 32px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 16px 32px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .floating-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .floating-element {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-element:nth-child(1) { width: 80px; height: 80px; top: 20%; left: 10%; }
+        .floating-element:nth-child(2) { width: 60px; height: 60px; top: 60%; right: 10%; animation-delay: 2s; }
+        .floating-element:nth-child(3) { width: 40px; height: 40px; top: 80%; left: 70%; animation-delay: 4s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 16px 20px;
+            z-index: 1000;
+            transform: translateX(400px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            max-width: 300px;
+        }
+
+        .notification.show { transform: translateX(0); opacity: 1; }
+        .notification.success { border-left: 4px solid #10b981; }
+        .notification.error { border-left: 4px solid #ef4444; }
+        .notification.info { border-left: 4px solid #3b82f6; }
+
+        /* Auth Screen Styles */
+        #auth-screen {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #main-app {
+            display: none;
+        }
+
+        .auth-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .auth-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .waveform {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 60px;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 20px;
+            margin: 20px 0;
+        }
+
+        .waveform-bar {
+            width: 6px;
+            margin: 0 3px;
+            background: linear-gradient(to top, #3b82f6, #8b5cf6);
+            border-radius: 3px;
+            animation: wave 1.5s ease-in-out infinite;
+        }
+
+        .waveform-bar:nth-child(1) { animation-delay: 0s; height: 15px; }
+        .waveform-bar:nth-child(2) { animation-delay: 0.1s; height: 25px; }
+        .waveform-bar:nth-child(3) { animation-delay: 0.2s; height: 35px; }
+        .waveform-bar:nth-child(4) { animation-delay: 0.3s; height: 30px; }
+        .waveform-bar:nth-child(5) { animation-delay: 0.4s; height: 40px; }
+        .waveform-bar:nth-child(6) { animation-delay: 0.5s; height: 20px; }
+        .waveform-bar:nth-child(7) { animation-delay: 0.6s; height: 30px; }
+
+        @keyframes wave {
+            0%, 100% { transform: scaleY(0.5); opacity: 0.7; }
+            50% { transform: scaleY(1); opacity: 1; }
+        }
+
+        .language-btn {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 12px 20px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .language-btn:hover {
+            transform: translateY(-2px);
+            border-color: #3b82f6;
+        }
+
+        .language-btn.active {
+            background: var(--primary-gradient);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        .dealership-btn {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            text-align: center;
+        }
+
+        .dealership-btn:hover {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+        }
+
+        .voice-controls-panel {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 20px;
+            z-index: 1000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .voice-controls-panel.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 50%;
+            padding: 12px;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Notification -->
+    <div id="notification" class="notification">
+        <div class="flex items-center gap-3">
+            <i class="fas fa-info-circle" id="notification-icon"></i>
+            <span id="notification-text">Notification</span>
+        </div>
+    </div>
+
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" onclick="toggleTheme()" id="theme-toggle-btn">
+        <i class="fas fa-sun" id="theme-icon"></i>
+    </button>
+
+    <!-- AUTH SCREEN - Shows first if not logged in -->
+    <div id="auth-screen">
+        <!-- Auth Header -->
+        <header class="gradient-bg py-8 px-4 relative">
+            <div class="floating-elements">
+                <div class="floating-element"></div>
+                <div class="floating-element"></div>
+                <div class="floating-element"></div>
+            </div>
+            <div class="container mx-auto text-center relative z-10">
+                <h1 class="text-4xl md:text-5xl font-bold mb-4">
+                    <i class="fas fa-motorcycle mr-3"></i>
+                    EveryLingua AI
+                </h1>
+                <p class="text-xl opacity-90">Motorcycle Dealership Voice Assistant</p>
+                <p class="text-sm opacity-70 mt-2">Sign in to access your personalized experience</p>
+            </div>
+        </header>
+
+        <!-- Auth Container -->
+        <div class="auth-container">
+            <div class="auth-card">
+                <!-- Login Form -->
+                <div id="login-form" class="auth-form">
+                    <h2 class="text-2xl font-bold text-center mb-6">
+                        <i class="fas fa-sign-in-alt mr-2 text-blue-400"></i>Welcome Back
+                    </h2>
+                    <form onsubmit="handleLogin(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Email Address</label>
+                            <input type="email" id="login-email" required class="form-input" placeholder="your@email.com">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Password</label>
+                            <input type="password" id="login-password" required class="form-input" placeholder="••••••••">
+                        </div>
+                        <div class="flex items-center">
+                            <input type="checkbox" id="remember-me" class="mr-2 w-4 h-4">
+                            <label for="remember-me" class="text-sm text-gray-300">Remember me for 2 days</label>
+                        </div>
+                        <button type="submit" class="btn-primary w-full justify-center mt-6">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Login
+                        </button>
+                    </form>
+                    <p class="text-center mt-6 text-gray-400">
+                        Don't have an account?
+                        <button onclick="switchAuthForm('signup')" class="text-blue-400 hover:underline ml-1">Sign Up</button>
+                    </p>
+                </div>
+
+                <!-- Signup Form -->
+                <div id="signup-form" class="auth-form hidden">
+                    <h2 class="text-2xl font-bold text-center mb-6">
+                        <i class="fas fa-user-plus mr-2 text-green-400"></i>Create Account
+                    </h2>
+                    <form onsubmit="handleSignup(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Full Name</label>
+                            <input type="text" id="signup-name" required class="form-input" placeholder="John Doe">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Email Address</label>
+                            <input type="email" id="signup-email" required class="form-input" placeholder="your@email.com">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Phone Number</label>
+                            <input type="tel" id="signup-phone" required class="form-input" placeholder="+91 9876543210">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Password</label>
+                            <input type="password" id="signup-password" required minlength="6" class="form-input" placeholder="••••••••">
+                        </div>
+                        <div class="flex items-center">
+                            <input type="checkbox" id="signup-remember" class="mr-2 w-4 h-4" checked>
+                            <label for="signup-remember" class="text-sm text-gray-300">Remember me for 2 days</label>
+                        </div>
+                        <button type="submit" class="btn-primary w-full justify-center mt-6" style="background: linear-gradient(135deg, #10b981 0%, #14b8a6 100%);">
+                            <i class="fas fa-user-plus"></i>
+                            Create Account
+                        </button>
+                    </form>
+                    <p class="text-center mt-6 text-gray-400">
+                        Already have an account?
+                        <button onclick="switchAuthForm('login')" class="text-blue-400 hover:underline ml-1">Login</button>
+                    </p>
+                </div>
+
+                <!-- OTP Form -->
+                <div id="otp-form" class="auth-form hidden">
+                    <h2 class="text-2xl font-bold text-center mb-6">
+                        <i class="fas fa-shield-alt mr-2 text-purple-400"></i>Verify OTP
+                    </h2>
+                    <p class="text-center text-gray-400 mb-6" id="otp-message">Enter the OTP sent to your email</p>
+                    <form onsubmit="handleVerifyOTP(event)" class="space-y-4">
+                        <div>
+                            <input type="text" id="otp-code" required maxlength="6" pattern="[0-9]{6}"
+                                class="form-input text-center text-2xl tracking-widest" placeholder="000000">
+                        </div>
+                        <button type="submit" class="btn-primary w-full justify-center" style="background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);">
+                            <i class="fas fa-check"></i>
+                            Verify OTP
+                        </button>
+                    </form>
+                    <p class="text-center mt-6 text-gray-400">
+                        Didn't receive OTP?
+                        <button onclick="resendOTP()" class="text-purple-400 hover:underline ml-1">Resend</button>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Auth Footer -->
+        <footer class="gradient-bg py-4 px-4 text-center relative">
+            <div class="relative z-10">
+                <p class="text-sm opacity-75">
+                    Powered by <strong>EveryLingua AI</strong> | Secure & Multilingual
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- MAIN APP - Shows after login -->
+    <div id="main-app">
+        <!-- App Header -->
+        <header class="gradient-bg py-6 px-4 relative">
+            <div class="floating-elements">
+                <div class="floating-element"></div>
+                <div class="floating-element"></div>
+                <div class="floating-element"></div>
+            </div>
+            <div class="container mx-auto relative z-10">
+                <div class="flex justify-between items-center mb-4">
+                    <div class="flex items-center gap-4">
+                        <i class="fas fa-motorcycle text-3xl"></i>
+                        <div>
+                            <h1 class="text-2xl font-bold">EveryLingua AI</h1>
+                            <p class="text-sm opacity-75">Voice Assistant</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect px-4 py-2 rounded-full flex items-center gap-3">
+                        <i class="fas fa-user-circle text-lg"></i>
+                        <span id="user-name-display" class="text-sm font-medium">User</span>
+                        <button onclick="handleLogout()" class="text-sm text-red-300 hover:text-red-200 ml-2">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
+                </div>
+                <div class="flex flex-wrap justify-center items-center gap-4 mt-4">
+                    <div class="flex items-center space-x-2 glass-effect px-4 py-2 rounded-full">
+                        <div id="status-indicator" class="w-3 h-3 bg-green-500 rounded-full"></div>
+                        <span id="status-text" class="text-sm">Ready</span>
+                    </div>
+                    <div class="glass-effect px-4 py-2 rounded-full">
+                        <span id="current-language" class="text-sm">Language: English</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="container mx-auto px-4 py-8">
+            <div class="max-w-4xl mx-auto">
+                <!-- Voice Interface -->
+                <div class="enhanced-card mb-8">
+                    <div class="text-center mb-8">
+                        <h2 class="text-2xl font-semibold mb-4">
+                            <i class="fas fa-microphone-alt mr-3 text-blue-400"></i>
+                            Voice Interface
+                        </h2>
+                        <p class="text-gray-300 mb-6">Click the microphone and speak in your preferred language</p>
+
+                        <div class="flex flex-wrap justify-center items-center gap-4 mb-8">
+                            <button id="start-btn" class="btn-primary">
+                                <i class="fas fa-microphone"></i>
+                                Start Listening
+                            </button>
+                            <button id="stop-btn" class="btn-secondary hidden">
+                                <i class="fas fa-stop"></i>
+                                Stop
+                            </button>
+                        </div>
+
+                        <div id="waveform" class="waveform hidden">
+                            <div class="waveform-bar"></div>
+                            <div class="waveform-bar"></div>
+                            <div class="waveform-bar"></div>
+                            <div class="waveform-bar"></div>
+                            <div class="waveform-bar"></div>
+                            <div class="waveform-bar"></div>
+                            <div class="waveform-bar"></div>
+                        </div>
+
+                        <div id="processing" class="hidden text-center">
+                            <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mb-2"></div>
+                            <p class="text-gray-300">Processing...</p>
+                        </div>
+                    </div>
+
+                    <!-- Language Selection -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-semibold mb-4 text-center">
+                            <i class="fas fa-globe mr-2"></i>Select Language
+                        </h3>
+                        <p class="text-sm text-gray-400 text-center mb-3">🇮🇳 Indian Languages</p>
+                        <div class="grid grid-cols-3 md:grid-cols-5 gap-2 mb-4">
+                            <button class="language-btn active" data-lang="en-IN">English</button>
+                            <button class="language-btn" data-lang="hi-IN">हिंदी</button>
+                            <button class="language-btn" data-lang="ta-IN">தமிழ்</button>
+                            <button class="language-btn" data-lang="te-IN">తెలుగు</button>
+                            <button class="language-btn" data-lang="kn-IN">ಕನ್ನಡ</button>
+                            <button class="language-btn" data-lang="ml-IN">മലയാളം</button>
+                            <button class="language-btn" data-lang="mr-IN">मराठी</button>
+                            <button class="language-btn" data-lang="gu-IN">ગુજરાતી</button>
+                            <button class="language-btn" data-lang="bn-IN">বাংলা</button>
+                            <button class="language-btn" data-lang="pa-IN">ਪੰਜਾਬੀ</button>
+                            <button class="language-btn" data-lang="or-IN">ଓଡ଼ିଆ</button>
+                            <button class="language-btn" data-lang="as-IN">অসমীয়া</button>
+                            <button class="language-btn" data-lang="ur-IN">اردو</button>
+                            <button class="language-btn" data-lang="ne-NP">नेपाली</button>
+                            <button class="language-btn" data-lang="si-LK">සිංහල</button>
+                        </div>
+                        <p class="text-sm text-gray-400 text-center mb-3">🌍 International Languages</p>
+                        <div class="grid grid-cols-3 md:grid-cols-6 gap-2">
+                            <button class="language-btn" data-lang="en-US">English (US)</button>
+                            <button class="language-btn" data-lang="es-ES">Español</button>
+                            <button class="language-btn" data-lang="fr-FR">Français</button>
+                            <button class="language-btn" data-lang="de-DE">Deutsch</button>
+                            <button class="language-btn" data-lang="ar-SA">العربية</button>
+                            <button class="language-btn" data-lang="zh-CN">中文</button>
+                            <button class="language-btn" data-lang="ja-JP">日本語</button>
+                            <button class="language-btn" data-lang="ko-KR">한국어</button>
+                            <button class="language-btn" data-lang="pt-PT">Português</button>
+                            <button class="language-btn" data-lang="ru-RU">Русский</button>
+                            <button class="language-btn" data-lang="th-TH">ไทย</button>
+                            <button class="language-btn" data-lang="vi-VN">Tiếng Việt</button>
+                            <button class="language-btn" data-lang="id-ID">Bahasa</button>
+                            <button class="language-btn" data-lang="ms-MY">Melayu</button>
+                            <button class="language-btn" data-lang="tr-TR">Türkçe</button>
+                            <button class="language-btn" data-lang="it-IT">Italiano</button>
+                            <button class="language-btn" data-lang="nl-NL">Nederlands</button>
+                            <button class="language-btn" data-lang="sv-SE">Svenska</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Conversation -->
+                <div class="enhanced-card mb-8">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-semibold">
+                            <i class="fas fa-comments mr-2"></i>Conversation
+                        </h3>
+                        <button id="clear-conversation" class="btn-secondary text-sm py-2 px-4">
+                            <i class="fas fa-trash mr-1"></i>Clear
+                        </button>
+                    </div>
+                    <div id="conversation" class="space-y-4 max-h-96 overflow-y-auto rounded-lg p-4 bg-black bg-opacity-20">
+                        <div class="text-center text-gray-400 py-8">
+                            <i class="fas fa-comments text-4xl mb-4 opacity-50"></i>
+                            <p>Click the microphone to start a conversation</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="mt-8">
+                    <h3 class="text-xl font-semibold mb-6 text-center">
+                        <i class="fas fa-bolt mr-2"></i>Quick Actions
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <button class="dealership-btn" data-action="bike-models">
+                            <i class="fas fa-motorcycle text-blue-400 text-3xl mb-3"></i>
+                            <h4 class="font-semibold text-lg mb-2">Bike Models</h4>
+                            <p class="text-sm text-gray-300">Explore motorcycles</p>
+                        </button>
+                        <button class="dealership-btn" data-action="service-booking">
+                            <i class="fas fa-tools text-green-400 text-3xl mb-3"></i>
+                            <h4 class="font-semibold text-lg mb-2">Service Booking</h4>
+                            <p class="text-sm text-gray-300">Book service</p>
+                        </button>
+                        <button class="dealership-btn" data-action="test-ride">
+                            <i class="fas fa-road text-purple-400 text-3xl mb-3"></i>
+                            <h4 class="font-semibold text-lg mb-2">Test Ride</h4>
+                            <p class="text-sm text-gray-300">Schedule test ride</p>
+                        </button>
+                        <button class="dealership-btn" data-action="finance">
+                            <i class="fas fa-calculator text-yellow-400 text-3xl mb-3"></i>
+                            <h4 class="font-semibold text-lg mb-2">Finance</h4>
+                            <p class="text-sm text-gray-300">EMI calculator</p>
+                        </button>
+                        <button class="dealership-btn" onclick="window.open('/dealer_locator.html', '_blank')">
+                            <i class="fas fa-map-marker-alt text-red-400 text-3xl mb-3"></i>
+                            <h4 class="font-semibold text-lg mb-2">Find Dealer</h4>
+                            <p class="text-sm text-gray-300">Locate dealers</p>
+                        </button>
+                        <a href="tel:+919876543210" class="dealership-btn text-center" style="text-decoration:none">
+                            <i class="fas fa-phone-alt text-indigo-400 text-3xl mb-3"></i>
+                            <h4 class="font-semibold text-lg mb-2">📞 Call Support</h4>
+                            <p class="text-sm text-gray-300">+91-9876543210 (IVR)</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- App Footer -->
+        <footer class="gradient-bg py-6 px-4 mt-12 relative">
+            <div class="container mx-auto text-center relative z-10">
+                <p class="text-sm opacity-75">
+                    Powered by <strong>EveryLingua AI</strong> | Multilingual Voice Assistant
+                </p>
+                <p class="text-sm opacity-60 mt-1">
+                    📞 24/7 IVR Support: <a href="tel:+919876543210" class="text-blue-300 hover:underline">+91-9876543210</a>
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Voice Controls Panel -->
+    <div id="voice-controls-panel" class="voice-controls-panel">
+        <div class="flex items-center gap-4">
+            <div class="text-sm text-gray-300 mr-2">
+                <i class="fas fa-volume-up animate-pulse"></i> Speaking...
+            </div>
+            <button id="pause-voice-btn" class="btn-secondary py-3 px-5" title="Pause/Resume">
+                <i class="fas fa-pause" id="pause-icon"></i>
+            </button>
+            <button id="stop-voice-btn" class="btn-secondary py-3 px-5" style="background: rgba(239, 68, 68, 0.3); border-color: rgba(239, 68, 68, 0.5);" title="Stop Speaking">
+                <i class="fas fa-stop"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // App State
+        let isLoggedIn = false;
+        let currentUser = null;
+        let pendingSignupData = null;
+        let currentLanguage = 'en-US';
+        let recognition = null;
+        let synth = window.speechSynthesis;
+        let isListening = false;
+        let isSpeaking = false;
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', () => {
+            checkExistingSession();
+            setupEventListeners();
+        });
+
+        // Check if user is already logged in
+        async function checkExistingSession() {
+            const sessionToken = localStorage.getItem('sessionToken');
+            const userName = localStorage.getItem('userName');
+            
+            if (sessionToken && userName) {
+                try {
+                    const response = await fetch('/api/auth/validate', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ session_token: sessionToken })
+                    });
+                    
+                    const data = await response.json();
+                    if (data.valid) {
+                        isLoggedIn = true;
+                        currentUser = { name: data.user.name || userName, email: data.user.email };
+                        showMainApp();
+                        showNotification(`Welcome back, ${currentUser.name}!`, 'success');
+                        return;
+                    }
+                } catch (error) {
+                    console.log('Session validation failed, showing auth screen');
+                }
+            }
+            
+            // No valid session, show auth screen
+            showAuthScreen();
+        }
+
+        function showAuthScreen() {
+            document.getElementById('auth-screen').style.display = 'flex';
+            document.getElementById('main-app').style.display = 'none';
+            document.getElementById('theme-toggle-btn').style.display = 'flex';
+        }
+
+        function showMainApp() {
+            document.getElementById('auth-screen').style.display = 'none';
+            document.getElementById('main-app').style.display = 'block';
+            document.getElementById('user-name-display').textContent = currentUser?.name || 'User';
+            document.getElementById('theme-toggle-btn').style.display = 'flex';
+            setupVoiceRecognition();
+        }
+
+        function switchAuthForm(formType) {
+            document.querySelectorAll('.auth-form').forEach(form => form.classList.add('hidden'));
+            document.getElementById(formType + '-form').classList.remove('hidden');
+        }
+
+        // Auth handlers
+        async function handleLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const rememberMe = document.getElementById('remember-me').checked;
+
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password, remember_me: rememberMe })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    localStorage.setItem('sessionToken', data.session_token);
+                    localStorage.setItem('userName', data.user.name);
+                    localStorage.setItem('userEmail', data.user.email);
+                    
+                    isLoggedIn = true;
+                    currentUser = { name: data.user.name, email: data.user.email };
+                    showMainApp();
+                    showNotification(`Welcome back, ${data.user.name}!`, 'success');
+                } else {
+                    showNotification(data.error || 'Login failed', 'error');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showNotification('Login failed. Please try again.', 'error');
+            }
+        }
+
+        async function handleSignup(event) {
+            event.preventDefault();
+            const name = document.getElementById('signup-name').value;
+            const email = document.getElementById('signup-email').value;
+            const phone = document.getElementById('signup-phone').value;
+            const password = document.getElementById('signup-password').value;
+            const rememberMe = document.getElementById('signup-remember').checked;
+
+            pendingSignupData = { name, email, phone, password, remember_me: rememberMe };
+
+            try {
+                const response = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        full_name: name,
+                        email,
+                        phone,
+                        password,
+                        otp: '000000'
+                    })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    if (data.session_token) {
+                        localStorage.setItem('sessionToken', data.session_token);
+                    }
+                    localStorage.setItem('userName', name);
+                    localStorage.setItem('userEmail', email);
+                    
+                    isLoggedIn = true;
+                    currentUser = { name, email };
+                    pendingSignupData = null;
+                    showMainApp();
+                    showNotification('Account created successfully!', 'success');
+                } else if (data.error && data.error.includes('OTP')) {
+                    // OTP required
+                    document.getElementById('otp-message').textContent = `OTP sent to ${email}`;
+                    switchAuthForm('otp');
+                    showNotification('OTP sent! Check your email.', 'success');
+                } else {
+                    showNotification(data.error || 'Registration failed', 'error');
+                }
+            } catch (error) {
+                console.error('Signup error:', error);
+                showNotification('Registration failed. Please try again.', 'error');
+            }
+        }
+
+        async function handleVerifyOTP(event) {
+            event.preventDefault();
+            const otp = document.getElementById('otp-code').value;
+
+            if (!pendingSignupData) {
+                showNotification('Please start signup again', 'error');
+                switchAuthForm('signup');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/register/verify-otp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: pendingSignupData.email,
+                        otp: otp,
+                        name: pendingSignupData.name,
+                        phone: pendingSignupData.phone,
+                        password: pendingSignupData.password
+                    })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    if (data.session_token) {
+                        localStorage.setItem('sessionToken', data.session_token);
+                    }
+                    localStorage.setItem('userName', pendingSignupData.name);
+                    localStorage.setItem('userEmail', pendingSignupData.email);
+                    
+                    isLoggedIn = true;
+                    currentUser = { name: pendingSignupData.name, email: pendingSignupData.email };
+                    pendingSignupData = null;
+                    showMainApp();
+                    showNotification('Account verified successfully!', 'success');
+                } else {
+                    showNotification(data.error || 'OTP verification failed', 'error');
+                }
+            } catch (error) {
+                showNotification('Verification failed', 'error');
+            }
+        }
+
+        async function resendOTP() {
+            if (!pendingSignupData) {
+                switchAuthForm('signup');
+                return;
+            }
+            showNotification('OTP resent!', 'success');
+        }
+
+        async function handleLogout() {
+            if (!confirm('Are you sure you want to logout?')) return;
+
+            const sessionToken = localStorage.getItem('sessionToken');
+            try {
+                if (sessionToken) {
+                    await fetch('/api/auth/logout', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ session_token: sessionToken })
+                    });
+                }
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
+
+            localStorage.removeItem('sessionToken');
+            localStorage.removeItem('userName');
+            localStorage.removeItem('userEmail');
+            
+            isLoggedIn = false;
+            currentUser = null;
+            showAuthScreen();
+            showNotification('Logged out successfully', 'success');
+        }
+
+        // Event listeners
+        function setupEventListeners() {
+            // Voice controls
+            document.getElementById('start-btn')?.addEventListener('click', startListening);
+            document.getElementById('stop-btn')?.addEventListener('click', stopListening);
+            document.getElementById('clear-conversation')?.addEventListener('click', clearConversation);
+
+            // Language buttons
+            document.querySelectorAll('.language-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    document.querySelectorAll('.language-btn').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    currentLanguage = e.target.dataset.lang;
+                    document.getElementById('current-language').textContent = `Language: ${currentLanguage}`;
+                    if (recognition) recognition.lang = currentLanguage;
+                    showNotification(`Language changed to ${currentLanguage}`, 'info');
+                });
+            });
+
+            // Quick actions
+            document.querySelectorAll('.dealership-btn[data-action]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const action = e.currentTarget.dataset.action;
+                    handleQuickAction(action);
+                });
+            });
+
+            // Voice controls panel - Pause/Resume button
+            document.getElementById('pause-voice-btn')?.addEventListener('click', () => {
+                if (synth.speaking) {
+                    const pauseIcon = document.getElementById('pause-icon');
+                    if (synth.paused) {
+                        synth.resume();
+                        pauseIcon.className = 'fas fa-pause';
+                        updateStatus('Speaking...', 'purple');
+                        console.log('Speech resumed');
+                    } else {
+                        synth.pause();
+                        pauseIcon.className = 'fas fa-play';
+                        updateStatus('Paused', 'yellow');
+                        console.log('Speech paused');
+                    }
+                }
+            });
+            
+            // Voice controls panel - Stop button
+            document.getElementById('stop-voice-btn')?.addEventListener('click', () => {
+                synth.cancel();
+                isSpeaking = false;
+                updateStatus('Ready', 'green');
+                document.getElementById('voice-controls-panel').classList.remove('active');
+                document.getElementById('pause-icon').className = 'fas fa-pause';
+                console.log('Speech stopped');
+            });
+        }
+
+        // Voice Recognition
+        function setupVoiceRecognition() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.lang = currentLanguage;
+
+                recognition.onstart = () => {
+                    isListening = true;
+                    updateStatus('Listening...', 'blue');
+                    document.getElementById('waveform').classList.remove('hidden');
+                };
+
+                recognition.onresult = (event) => {
+                    const transcript = event.results[0][0].transcript;
+                    addMessage('user', transcript);
+                    // Pass true to indicate this was voice input - so response will be spoken
+                    processQuery(transcript, true);
+                };
+
+                recognition.onerror = (event) => {
+                    console.error('Speech error:', event.error);
+                    updateStatus('Error', 'red');
+                    document.getElementById('waveform').classList.add('hidden');
+                };
+
+                recognition.onend = () => {
+                    isListening = false;
+                    updateStatus('Ready', 'green');
+                    document.getElementById('waveform').classList.add('hidden');
+                    document.getElementById('start-btn').classList.remove('hidden');
+                    document.getElementById('stop-btn').classList.add('hidden');
+                };
+            }
+        }
+
+        function startListening() {
+            if (recognition && !isListening) {
+                document.getElementById('start-btn').classList.add('hidden');
+                document.getElementById('stop-btn').classList.remove('hidden');
+                recognition.start();
+            }
+        }
+
+        function stopListening() {
+            if (recognition && isListening) {
+                recognition.stop();
+                document.getElementById('start-btn').classList.remove('hidden');
+                document.getElementById('stop-btn').classList.add('hidden');
+            }
+        }
+
+        function updateStatus(text, color) {
+            const indicator = document.getElementById('status-indicator');
+            const statusText = document.getElementById('status-text');
+            if (indicator && statusText) {
+                indicator.className = `w-3 h-3 rounded-full bg-${color}-500`;
+                statusText.textContent = text;
+            }
+        }
+
+        function addMessage(sender, text) {
+            const conversation = document.getElementById('conversation');
+            if (!conversation) return;
+            
+            if (conversation.querySelector('.text-center.text-gray-400')) {
+                conversation.innerHTML = '';
+            }
+
+            const div = document.createElement('div');
+            div.className = `p-4 rounded-lg ${sender === 'user' ? 'bg-blue-600 ml-12' : 'bg-gray-700 mr-12'}`;
+            div.innerHTML = `
+                <div class="flex items-start gap-3">
+                    <i class="fas fa-${sender === 'user' ? 'user' : 'robot'}"></i>
+                    <div class="flex-1">${text}</div>
+                    <span class="text-xs opacity-60">${new Date().toLocaleTimeString()}</span>
+                </div>
+            `;
+            conversation.appendChild(div);
+            conversation.scrollTop = conversation.scrollHeight;
+        }
+
+        function clearConversation() {
+            const conversation = document.getElementById('conversation');
+            if (conversation) {
+                conversation.innerHTML = `
+                    <div class="text-center text-gray-400 py-8">
+                        <i class="fas fa-comments text-4xl mb-4 opacity-50"></i>
+                        <p>Click the microphone to start a conversation</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Track if the query was from voice input
+        let lastQueryWasVoice = false;
+
+        async function processQuery(query, isVoiceInput = false) {
+            document.getElementById('processing').classList.remove('hidden');
+            lastQueryWasVoice = isVoiceInput;
+            
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        message: query, 
+                        language: currentLanguage,
+                        is_voice: isVoiceInput 
+                    })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    addMessage('assistant', data.response);
+                    // Always speak if it was a voice query OR if should_speak is true
+                    if (isVoiceInput || data.should_speak) {
+                        speakText(data.response);
+                    }
+                } else {
+                    const errorMsg = 'Sorry, I encountered an error.';
+                    addMessage('assistant', errorMsg);
+                    if (isVoiceInput) speakText(errorMsg);
+                }
+            } catch (error) {
+                const errorMsg = 'Connection error. Please try again.';
+                addMessage('assistant', errorMsg);
+                if (isVoiceInput) speakText(errorMsg);
+            } finally {
+                document.getElementById('processing').classList.add('hidden');
+            }
+        }
+
+        // Get best voice for language
+        function getBestVoice(langCode) {
+            const voices = synth.getVoices();
+            const langPrefix = langCode.split('-')[0];
+            
+            // Try exact match first
+            let voice = voices.find(v => v.lang === langCode);
+            if (voice) return voice;
+            
+            // Try prefix match
+            voice = voices.find(v => v.lang.startsWith(langPrefix));
+            if (voice) return voice;
+            
+            // Try to find Google voice for the language
+            voice = voices.find(v => v.name.toLowerCase().includes('google') && v.lang.startsWith(langPrefix));
+            if (voice) return voice;
+            
+            // Return default
+            return voices[0] || null;
+        }
+
+        function speakText(text) {
+            if (!synth) {
+                console.error('Speech synthesis not available');
+                return;
+            }
+            
+            // Cancel any ongoing speech
+            synth.cancel();
+            
+            // Clean the text for better TTS
+            let cleanText = text
+                .replace(/[*#_`~\[\](){}]/g, '')  // Remove markdown
+                .replace(/\n+/g, '. ')             // Replace newlines with pauses
+                .replace(/\s+/g, ' ')              // Normalize whitespace
+                .trim();
+            
+            if (!cleanText) {
+                console.log('No text to speak');
+                return;
+            }
+            
+            console.log('Speaking:', cleanText.substring(0, 100) + '...');
+            console.log('Language:', currentLanguage);
+            
+            const utterance = new SpeechSynthesisUtterance(cleanText);
+            utterance.lang = currentLanguage;
+            utterance.rate = currentLanguage === 'en-US' ? 1.0 : 0.9;
+            utterance.pitch = 1;
+            utterance.volume = 1;
+            
+            // Try to get best voice for language
+            const voice = getBestVoice(currentLanguage);
+            if (voice) {
+                utterance.voice = voice;
+                console.log('Using voice:', voice.name);
+            }
+            
+            utterance.onstart = () => {
+                console.log('Speech started');
+                isSpeaking = true;
+                updateStatus('Speaking...', 'purple');
+                document.getElementById('voice-controls-panel').classList.add('active');
+            };
+            
+            utterance.onend = () => {
+                console.log('Speech ended');
+                isSpeaking = false;
+                updateStatus('Ready', 'green');
+                document.getElementById('voice-controls-panel').classList.remove('active');
+            };
+            
+            utterance.onerror = (event) => {
+                console.error('Speech error:', event.error);
+                isSpeaking = false;
+                updateStatus('Ready', 'green');
+                document.getElementById('voice-controls-panel').classList.remove('active');
+            };
+            
+            // Small delay to ensure voices are loaded
+            setTimeout(() => {
+                synth.speak(utterance);
+            }, 100);
+        }
+
+        // Load voices when available
+        if (synth) {
+            synth.onvoiceschanged = () => {
+                console.log('Voices loaded:', synth.getVoices().length);
+            };
+        }
+
+        function handleQuickAction(action) {
+            const queries = {
+                'bike-models': 'Show me available bike models',
+                'service-booking': 'I want to book a service',
+                'test-ride': 'Schedule a test ride',
+                'finance': 'Tell me about finance options',
+                'contact-support': 'Connect me to support'
+            };
+            const query = queries[action];
+            if (query) {
+                addMessage('user', query);
+                processQuery(query);
+            }
+        }
+
+        // Notifications
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            const icon = document.getElementById('notification-icon');
+            const text = document.getElementById('notification-text');
+
+            const icons = {
+                success: 'fas fa-check-circle',
+                error: 'fas fa-exclamation-triangle',
+                info: 'fas fa-info-circle'
+            };
+
+            icon.className = icons[type] || icons.info;
+            text.textContent = message;
+            notification.className = `notification ${type} show`;
+
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        function toggleTheme() {
+            // Theme toggle functionality
+            showNotification('Theme toggle coming soon!', 'info');
+        }
+    </script>
+</body>
+</html>

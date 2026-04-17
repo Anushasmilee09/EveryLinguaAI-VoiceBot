@@ -1,0 +1,1907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EveryLingua AI - Interactive Dealer Locator</title>
+    
+    <!-- PWA Configuration -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="EveryLingua AI">
+    
+    <!-- Performance Optimizations -->
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+    
+    <!-- Leaflet MarkerCluster CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+    
+    <!-- Stylesheets -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    
+    <!-- Leaflet MarkerCluster JS -->
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+    
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --primary-glow: rgba(59, 130, 246, 0.6);
+            --secondary: #10b981;
+            --secondary-glow: rgba(16, 185, 129, 0.6);
+            --accent: #8b5cf6;
+            --accent-glow: rgba(139, 92, 246, 0.6);
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --bg-primary: #0a0f1a;
+            --bg-secondary: #111827;
+            --bg-tertiary: #1f2937;
+            --bg-card: rgba(17, 24, 39, 0.95);
+            --border-color: rgba(59, 130, 246, 0.2);
+            --border-glow: rgba(59, 130, 246, 0.4);
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --glass-bg: rgba(15, 23, 42, 0.85);
+            --glass-border: rgba(59, 130, 246, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent);
+        }
+
+        /* Main Layout */
+        .app-container {
+            display: flex;
+            height: 100vh;
+            width: 100%;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 420px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+            box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .sidebar-header {
+            padding: 24px;
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .brand-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 20px var(--primary-glow);
+        }
+
+        .brand-text h1 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .brand-text p {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .stats-bar {
+            display: flex;
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            background: var(--bg-primary);
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-item i {
+            font-size: 14px;
+        }
+
+        .stat-item span {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .stat-item.sales i { color: var(--primary); }
+        .stat-item.service i { color: var(--secondary); }
+
+        /* Search Section */
+        .search-section {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .search-wrapper {
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 16px 20px 16px 52px;
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            border-radius: 14px;
+            color: var(--text-primary);
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15), 0 0 20px var(--primary-glow);
+        }
+
+        .search-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 16px;
+        }
+
+        .search-clear {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px;
+            display: none;
+        }
+
+        .search-clear.visible {
+            display: block;
+        }
+
+        /* Filter Pills */
+        .filter-pills {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .filter-pill {
+            padding: 8px 16px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .filter-pill:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .filter-pill.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px var(--primary-glow);
+        }
+
+        .filter-pill.active.service {
+            background: var(--secondary);
+            border-color: var(--secondary);
+            box-shadow: 0 4px 12px var(--secondary-glow);
+        }
+
+        /* Dealer List */
+        .dealer-list-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 24px;
+        }
+
+        .dealer-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .dealer-list-header h2 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .dealer-count {
+            background: var(--primary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .dealer-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .dealer-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 18px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dealer-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--primary);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .dealer-card.service-type::before {
+            background: var(--secondary);
+        }
+
+        .dealer-card:hover {
+            border-color: var(--primary);
+            transform: translateX(4px);
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);
+        }
+
+        .dealer-card:hover::before {
+            opacity: 1;
+        }
+
+        .dealer-card.active {
+            border-color: var(--primary);
+            background: rgba(59, 130, 246, 0.08);
+            box-shadow: 0 0 0 2px var(--primary-glow), 0 8px 32px rgba(59, 130, 246, 0.2);
+        }
+
+        .dealer-card.active::before {
+            opacity: 1;
+        }
+
+        .dealer-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .dealer-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.3;
+            margin-bottom: 4px;
+        }
+
+        .dealer-type {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .dealer-type.sales {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--primary);
+        }
+
+        .dealer-type.service {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--secondary);
+        }
+
+        .dealer-address {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            color: var(--text-secondary);
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .dealer-address i {
+            color: var(--danger);
+            margin-top: 3px;
+            flex-shrink: 0;
+        }
+
+        .dealer-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .dealer-distance {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--primary);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .dealer-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .action-btn.call {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--secondary);
+        }
+
+        .action-btn.call:hover {
+            background: var(--secondary);
+            color: white;
+            box-shadow: 0 4px 12px var(--secondary-glow);
+        }
+
+        .action-btn.directions {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--primary);
+        }
+
+        .action-btn.directions:hover {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px var(--primary-glow);
+        }
+
+        /* Sidebar Footer */
+        .sidebar-footer {
+            padding: 20px 24px;
+            background: var(--bg-tertiary);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .location-btn {
+            width: 100%;
+            padding: 14px 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px var(--primary-glow);
+        }
+
+        .location-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px var(--primary-glow);
+        }
+
+        .location-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Map Container */
+        .map-container {
+            flex: 1;
+            position: relative;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Custom Leaflet Styles - High Contrast Dark Theme */
+        .leaflet-container {
+            background: #0a0f1a;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Custom Marker Styles */
+        .custom-marker {
+            position: relative;
+        }
+
+        .marker-pin {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .marker-pin.sales {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.5), 0 0 40px rgba(59, 130, 246, 0.3), inset 0 1px 0 rgba(255,255,255,0.3);
+            border: 3px solid rgba(255, 255, 255, 0.9);
+        }
+
+        .marker-pin.service {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.5), 0 0 40px rgba(16, 185, 129, 0.3), inset 0 1px 0 rgba(255,255,255,0.3);
+            border: 3px solid rgba(255, 255, 255, 0.9);
+        }
+
+        .marker-pin i {
+            color: white;
+            font-size: 18px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .marker-glow {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.4;
+            z-index: -1;
+        }
+
+        .marker-glow.sales {
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.6) 0%, transparent 70%);
+        }
+
+        .marker-glow.service {
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.6) 0%, transparent 70%);
+        }
+
+        /* Selected/Active Marker with Pulse Animation */
+        .marker-active .marker-pin {
+            transform: scale(1.15);
+        }
+
+        .marker-active .marker-glow {
+            animation: markerPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes markerPulse {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.6;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.4);
+                opacity: 0.2;
+            }
+        }
+
+        /* Marker Hover Effect */
+        .custom-marker:hover .marker-pin {
+            transform: scale(1.1);
+        }
+
+        .custom-marker:hover .marker-glow {
+            opacity: 0.6;
+        }
+
+        /* Cluster Marker Styles */
+        .marker-cluster {
+            background: transparent !important;
+        }
+
+        .marker-cluster div {
+            width: 48px;
+            height: 48px;
+            margin-left: 0;
+            margin-top: 0;
+            text-align: center;
+            border-radius: 50%;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 16px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+            border: 3px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.5), 0 0 40px rgba(139, 92, 246, 0.3);
+        }
+
+        .marker-cluster-small div {
+            width: 44px;
+            height: 44px;
+            font-size: 14px;
+        }
+
+        .marker-cluster-medium div {
+            width: 52px;
+            height: 52px;
+            font-size: 16px;
+        }
+
+        .marker-cluster-large div {
+            width: 60px;
+            height: 60px;
+            font-size: 18px;
+        }
+
+        /* Custom Popup Styles */
+        .leaflet-popup-content-wrapper {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 0;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(59, 130, 246, 0.15);
+            backdrop-filter: blur(20px);
+        }
+
+        .leaflet-popup-tip {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-top: none;
+            border-right: none;
+            box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .leaflet-popup-content {
+            margin: 0;
+            color: var(--text-primary);
+        }
+
+        .leaflet-popup-close-button {
+            color: var(--text-muted) !important;
+            font-size: 24px !important;
+            width: 32px !important;
+            height: 32px !important;
+            padding: 0 !important;
+            top: 10px !important;
+            right: 10px !important;
+        }
+
+        .leaflet-popup-close-button:hover {
+            color: var(--text-primary) !important;
+        }
+
+        .popup-content {
+            padding: 20px;
+            min-width: 280px;
+        }
+
+        .popup-header {
+            margin-bottom: 16px;
+        }
+
+        .popup-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            padding-right: 24px;
+        }
+
+        .popup-type {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .popup-type.sales {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--primary);
+        }
+
+        .popup-type.service {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--secondary);
+        }
+
+        .popup-info {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .popup-info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .popup-info-item i {
+            width: 20px;
+            text-align: center;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        .popup-info-item i.fa-map-marker-alt { color: var(--danger); }
+        .popup-info-item i.fa-phone { color: var(--secondary); }
+        .popup-info-item i.fa-clock { color: var(--warning); }
+
+        .popup-info-item span {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .popup-services {
+            margin-bottom: 16px;
+        }
+
+        .popup-services-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .popup-services-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .service-tag {
+            padding: 4px 10px;
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--primary);
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .popup-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .popup-btn {
+            flex: 1;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .popup-btn.primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .popup-btn.primary:hover {
+            background: #2563eb;
+            box-shadow: 0 4px 15px var(--primary-glow);
+        }
+
+        .popup-btn.secondary {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .popup-btn.secondary:hover {
+            background: #059669;
+            box-shadow: 0 4px 15px var(--secondary-glow);
+        }
+
+        /* Floating Map Controls */
+        .map-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .map-control-btn {
+            width: 48px;
+            height: 48px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 18px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            text-decoration: none;
+        }
+
+        .map-control-btn:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            box-shadow: 0 4px 20px var(--primary-glow);
+        }
+
+        /* Legend */
+        .map-legend {
+            position: absolute;
+            bottom: 30px;
+            right: 20px;
+            z-index: 1000;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 16px 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .legend-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .legend-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .legend-marker {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.8);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .legend-marker.sales {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        }
+
+        .legend-marker.service {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        .legend-marker.cluster {
+            background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+        }
+
+        .legend-text {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* User Location Marker */
+        .user-location-marker {
+            width: 24px;
+            height: 24px;
+            background: var(--danger);
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.5);
+            position: relative;
+        }
+
+        .user-location-marker::after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle, rgba(239, 68, 68, 0.4) 0%, transparent 70%);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: userPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes userPulse {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.6;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.5);
+                opacity: 0.2;
+            }
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-content {
+            text-align: center;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid var(--border-color);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 24px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .loading-subtext {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* Notification Toast */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 9999;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .toast.visible {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .toast.success { border-left: 4px solid var(--secondary); }
+        .toast.error { border-left: 4px solid var(--danger); }
+        .toast.info { border-left: 4px solid var(--primary); }
+
+        .toast-icon {
+            font-size: 18px;
+        }
+
+        .toast.success .toast-icon { color: var(--secondary); }
+        .toast.error .toast-icon { color: var(--danger); }
+        .toast.info .toast-icon { color: var(--primary); }
+
+        .toast-message {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 380px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                max-height: 50vh;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+                order: 2;
+            }
+
+            .map-container {
+                order: 1;
+                height: 50vh;
+            }
+
+            .sidebar-header {
+                padding: 16px 20px;
+            }
+
+            .brand-logo {
+                margin-bottom: 12px;
+            }
+
+            .brand-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+
+            .brand-text h1 {
+                font-size: 18px;
+            }
+
+            .stats-bar {
+                gap: 10px;
+            }
+
+            .stat-item {
+                padding: 6px 12px;
+            }
+
+            .stat-item span {
+                font-size: 12px;
+            }
+
+            .search-section {
+                padding: 16px 20px;
+            }
+
+            .dealer-list-container {
+                padding: 12px 20px;
+                max-height: calc(50vh - 280px);
+            }
+
+            .dealer-card {
+                padding: 14px;
+            }
+
+            .dealer-name {
+                font-size: 15px;
+            }
+
+            .sidebar-footer {
+                padding: 16px 20px;
+            }
+
+            .map-controls {
+                top: 10px;
+                right: 10px;
+            }
+
+            .map-control-btn {
+                width: 42px;
+                height: 42px;
+                font-size: 16px;
+            }
+
+            .map-legend {
+                bottom: 20px;
+                right: 10px;
+                left: 10px;
+                padding: 12px 16px;
+            }
+
+            .legend-title {
+                font-size: 11px;
+            }
+
+            .legend-item {
+                gap: 8px;
+            }
+
+            .legend-marker {
+                width: 16px;
+                height: 16px;
+            }
+
+            .legend-text {
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .brand-text h1 {
+                font-size: 16px;
+            }
+
+            .stats-bar {
+                flex-wrap: wrap;
+            }
+
+            .filter-pills {
+                flex-wrap: wrap;
+            }
+
+            .popup-content {
+                min-width: 240px;
+                padding: 16px;
+            }
+
+            .popup-title {
+                font-size: 16px;
+            }
+
+            .popup-btn {
+                padding: 10px 14px;
+                font-size: 12px;
+            }
+        }
+
+        /* Hide Leaflet default attribution on mobile */
+        @media (max-width: 768px) {
+            .leaflet-control-attribution {
+                font-size: 9px;
+                padding: 2px 6px;
+            }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .empty-state p {
+            font-size: 14px;
+        }
+
+        /* Mobile Toggle Button */
+        .mobile-toggle {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1001;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 8px 30px var(--primary-glow);
+        }
+
+        @media (max-width: 768px) {
+            .mobile-toggle {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Loading Dealer Locator</div>
+            <div class="loading-subtext">Initializing map and locations...</div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <i class="fas fa-info-circle toast-icon"></i>
+        <span class="toast-message">Notification message</span>
+    </div>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="brand-logo">
+                    <div class="brand-icon">
+                        <i class="fas fa-motorcycle"></i>
+                    </div>
+                    <div class="brand-text">
+                        <h1>EveryLingua Motors</h1>
+                        <p>Find Your Nearest Dealership</p>
+                    </div>
+                </div>
+                <div class="stats-bar">
+                    <div class="stat-item sales">
+                        <i class="fas fa-store"></i>
+                        <span id="sales-count">0 Sales</span>
+                    </div>
+                    <div class="stat-item service">
+                        <i class="fas fa-wrench"></i>
+                        <span id="service-count">0 Service</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="search-section">
+                <div class="search-wrapper">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="search-input" class="search-input" placeholder="Search by city or dealership name...">
+                    <button class="search-clear" id="search-clear" onclick="clearSearch()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="filter-pills">
+                    <button class="filter-pill active" data-filter="all" onclick="filterDealers('all', this)">
+                        <i class="fas fa-list"></i> All
+                    </button>
+                    <button class="filter-pill" data-filter="sales" onclick="filterDealers('sales', this)">
+                        <i class="fas fa-store"></i> Sales
+                    </button>
+                    <button class="filter-pill service" data-filter="service" onclick="filterDealers('service', this)">
+                        <i class="fas fa-wrench"></i> Service
+                    </button>
+                </div>
+            </div>
+
+            <div class="dealer-list-container">
+                <div class="dealer-list-header">
+                    <h2>Dealerships</h2>
+                    <span class="dealer-count" id="dealer-count">0</span>
+                </div>
+                <div class="dealer-list" id="dealer-list">
+                    <!-- Dealer cards will be dynamically inserted here -->
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                <button class="location-btn" onclick="getUserLocation()">
+                    <i class="fas fa-crosshairs"></i>
+                    <span>Use My Location</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Map Container -->
+        <div class="map-container">
+            <div id="map"></div>
+
+            <!-- Map Controls -->
+            <div class="map-controls">
+                <button class="map-control-btn" onclick="centerOnIndia()" title="Reset View">
+                    <i class="fas fa-compress-arrows-alt"></i>
+                </button>
+                <button class="map-control-btn" onclick="getUserLocation()" title="My Location">
+                    <i class="fas fa-location-arrow"></i>
+                </button>
+                <a href="/" class="map-control-btn" title="Voice Assistant">
+                    <i class="fas fa-microphone"></i>
+                </a>
+            </div>
+
+            <!-- Legend -->
+            <div class="map-legend">
+                <div class="legend-title">Map Legend</div>
+                <div class="legend-item">
+                    <div class="legend-marker sales"></div>
+                    <span class="legend-text">Sales Showroom</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-marker service"></div>
+                    <span class="legend-text">Service Center</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-marker cluster"></div>
+                    <span class="legend-text">Multiple Locations</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Toggle Button -->
+    <button class="mobile-toggle" id="mobile-toggle" onclick="toggleMobileView()">
+        <i class="fas fa-list"></i>
+        <span>View List</span>
+    </button>
+
+    <script>
+        // Global State
+        let map = null;
+        let markerClusterGroup = null;
+        let dealerMarkers = [];
+        let userLocationMarker = null;
+        let userLocation = null;
+        let allDealers = [];
+        let activeMarkerId = null;
+        let currentFilter = 'all';
+
+        // Initialize Application
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                initMap();
+                await loadDealerships();
+                setupSearch();
+                hideLoading();
+                showToast('Dealer locator ready!', 'success');
+            } catch (error) {
+                console.error('Initialization error:', error);
+                showToast('Failed to load dealer locator', 'error');
+                hideLoading();
+            }
+        });
+
+        // Initialize Leaflet Map with High-Contrast Dark Theme
+        function initMap() {
+            map = L.map('map', {
+                center: [20.5937, 78.9629],
+                zoom: 5,
+                zoomControl: false,
+                attributionControl: true
+            });
+
+            // High-contrast dark tile layer - CartoDB Dark Matter with labels
+            const darkTileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+                maxZoom: 19,
+                subdomains: 'abcd'
+            });
+
+            darkTileLayer.addTo(map);
+
+            // Add zoom control to bottom left
+            L.control.zoom({ position: 'bottomleft' }).addTo(map);
+
+            // Initialize marker cluster group with custom options
+            markerClusterGroup = L.markerClusterGroup({
+                maxClusterRadius: 60,
+                spiderfyOnMaxZoom: true,
+                showCoverageOnHover: false,
+                zoomToBoundsOnClick: true,
+                iconCreateFunction: function(cluster) {
+                    const count = cluster.getChildCount();
+                    let size = 'small';
+                    if (count > 10) size = 'medium';
+                    if (count > 20) size = 'large';
+                    
+                    return L.divIcon({
+                        html: `<div>${count}</div>`,
+                        className: `marker-cluster marker-cluster-${size}`,
+                        iconSize: [48, 48]
+                    });
+                }
+            });
+
+            map.addLayer(markerClusterGroup);
+        }
+
+        // Load Dealerships from API
+        async function loadDealerships() {
+            try {
+                const response = await fetch('/api/dealerships');
+                const data = await response.json();
+                
+                if (data.success && data.data) {
+                    allDealers = data.data.map((dealer, index) => ({
+                        id: index,
+                        name: dealer.name,
+                        address: dealer.address,
+                        city: dealer.city,
+                        state: dealer.state,
+                        phone: dealer.phone,
+                        lat: dealer.latitude,
+                        lng: dealer.longitude,
+                        type: index % 3 === 0 ? 'service' : 'sales', // Alternate types
+                        hours: dealer.working_hours,
+                        services: ['Sales', 'Service', 'Spare Parts', 'Test Rides']
+                    }));
+                } else {
+                    throw new Error('API returned no data');
+                }
+            } catch (error) {
+                console.error('Error loading dealerships:', error);
+                // Fallback data
+                allDealers = getFallbackDealerships();
+            }
+
+            addMarkersToMap(allDealers);
+            updateDealerList(allDealers);
+            updateStats();
+        }
+
+        // Fallback dealerships if API fails
+        function getFallbackDealerships() {
+            return [
+                { id: 0, name: "EveryLingua Motors - Mumbai Central", address: "123 MG Road, Mumbai Central", city: "Mumbai", state: "Maharashtra", phone: "+919876543210", lat: 19.0760, lng: 72.8777, type: "sales", services: ["Sales", "Service", "Spare Parts"] },
+                { id: 1, name: "EveryLingua Motors - Connaught Place", address: "45 Connaught Place", city: "New Delhi", state: "Delhi", phone: "+919876543211", lat: 28.6139, lng: 77.2090, type: "service", services: ["Service", "Spare Parts", "Test Rides"] },
+                { id: 2, name: "EveryLingua Motors - Bangalore", address: "100 Feet Road, Indiranagar", city: "Bangalore", state: "Karnataka", phone: "+919876543212", lat: 12.9716, lng: 77.5946, type: "sales", services: ["Sales", "Service", "Spare Parts", "Test Rides"] },
+                { id: 3, name: "EveryLingua Motors - Chennai", address: "Anna Salai, T. Nagar", city: "Chennai", state: "Tamil Nadu", phone: "+919876543213", lat: 13.0827, lng: 80.2707, type: "service", services: ["Sales", "Service", "Spare Parts"] },
+                { id: 4, name: "EveryLingua Motors - Hyderabad", address: "Jubilee Hills, Road No. 36", city: "Hyderabad", state: "Telangana", phone: "+919876543214", lat: 17.3850, lng: 78.4867, type: "sales", services: ["Sales", "Service", "Spare Parts", "Test Rides"] },
+                { id: 5, name: "EveryLingua Motors - Kolkata", address: "Park Street", city: "Kolkata", state: "West Bengal", phone: "+919876543225", lat: 22.5726, lng: 88.3639, type: "service", services: ["Sales", "Service", "Spare Parts"] },
+                { id: 6, name: "EveryLingua Motors - Ahmedabad", address: "CG Road, Navrangpura", city: "Ahmedabad", state: "Gujarat", phone: "+919876543223", lat: 23.0225, lng: 72.5714, type: "sales", services: ["Sales", "Service", "Spare Parts", "Test Rides"] },
+                { id: 7, name: "EveryLingua Motors - Pune", address: "78 FC Road, Shivajinagar", city: "Pune", state: "Maharashtra", phone: "+919876543216", lat: 18.5204, lng: 73.8567, type: "service", services: ["Sales", "Service", "Spare Parts"] },
+                { id: 8, name: "EveryLingua Motors - Jaipur", address: "MI Road", city: "Jaipur", state: "Rajasthan", phone: "+919876543226", lat: 26.9124, lng: 75.7873, type: "sales", services: ["Sales", "Service", "Spare Parts", "Test Rides"] },
+                { id: 9, name: "EveryLingua Motors - Kochi", address: "MG Road, Ernakulam", city: "Kochi", state: "Kerala", phone: "+919876543227", lat: 9.9312, lng: 76.2673, type: "service", services: ["Sales", "Service", "Spare Parts"] },
+                { id: 10, name: "EveryLingua Motors - Chandigarh", address: "Sector 17, Main Market", city: "Chandigarh", state: "Punjab", phone: "+919876543230", lat: 30.7333, lng: 76.7794, type: "sales", services: ["Sales", "Service", "Spare Parts", "Test Rides"] },
+                { id: 11, name: "EveryLingua Motors - Bhubaneswar", address: "Janpath, Unit 4", city: "Bhubaneswar", state: "Odisha", phone: "+919876543231", lat: 20.2961, lng: 85.8245, type: "service", services: ["Sales", "Service", "Spare Parts"] },
+                { id: 12, name: "EveryLingua Motors - Guwahati", address: "GS Road, Paltan Bazaar", city: "Guwahati", state: "Assam", phone: "+919876543232", lat: 26.1445, lng: 91.7362, type: "sales", services: ["Sales", "Service", "Spare Parts", "Test Rides"] },
+                { id: 13, name: "EveryLingua Motors - Patna", address: "Fraser Road, Patna Junction", city: "Patna", state: "Bihar", phone: "+919876543233", lat: 25.6093, lng: 85.1376, type: "service", services: ["Sales", "Service", "Spare Parts"] },
+                { id: 14, name: "EveryLingua Motors - Panaji", address: "18th June Road, Panaji", city: "Panaji", state: "Goa", phone: "+919876543235", lat: 15.4909, lng: 73.8278, type: "sales", services: ["Sales", "Service", "Spare Parts", "Test Rides"] },
+                { id: 15, name: "EveryLingua Motors - Srinagar", address: "Lal Chowk, City Center", city: "Srinagar", state: "Jammu & Kashmir", phone: "+919876543238", lat: 34.0837, lng: 74.7973, type: "service", services: ["Sales", "Service", "Spare Parts"] },
+                { id: 16, name: "EveryLingua Motors - Visakhapatnam", address: "Dwaraka Nagar, Main Road", city: "Visakhapatnam", state: "Andhra Pradesh", phone: "+919876543239", lat: 17.6868, lng: 83.2185, type: "sales", services: ["Sales", "Service", "Spare Parts", "Test Rides"] },
+                { id: 17, name: "EveryLingua Motors - Dehradun", address: "Rajpur Road", city: "Dehradun", state: "Uttarakhand", phone: "+919876543237", lat: 30.3165, lng: 78.0322, type: "service", services: ["Sales", "Service", "Spare Parts"] },
+                { id: 18, name: "EveryLingua Motors - Raipur", address: "Pandri, Main Road", city: "Raipur", state: "Chhattisgarh", phone: "+919876543236", lat: 21.2514, lng: 81.6296, type: "sales", services: ["Sales", "Service", "Spare Parts", "Test Rides"] },
+                { id: 19, name: "EveryLingua Motors - Dimapur", address: "Hong Kong Market, Main Road", city: "Dimapur", state: "Nagaland", phone: "+919876543240", lat: 25.9065, lng: 93.7272, type: "service", services: ["Sales", "Service", "Spare Parts"] }
+            ];
+        }
+
+        // Create custom marker icon
+        function createMarkerIcon(type, isActive = false) {
+            const iconClass = type === 'service' ? 'fa-wrench' : 'fa-store';
+            const activeClass = isActive ? 'marker-active' : '';
+            
+            return L.divIcon({
+                className: 'custom-marker',
+                html: `
+                    <div class="custom-marker ${activeClass}">
+                        <div class="marker-glow ${type}"></div>
+                        <div class="marker-pin ${type}">
+                            <i class="fas ${iconClass}"></i>
+                        </div>
+                    </div>
+                `,
+                iconSize: [44, 44],
+                iconAnchor: [22, 22],
+                popupAnchor: [0, -22]
+            });
+        }
+
+        // Add markers to map
+        function addMarkersToMap(dealers) {
+            // Clear existing markers
+            markerClusterGroup.clearLayers();
+            dealerMarkers = [];
+
+            dealers.forEach(dealer => {
+                const marker = L.marker([dealer.lat, dealer.lng], {
+                    icon: createMarkerIcon(dealer.type)
+                });
+
+                marker.dealerId = dealer.id;
+                marker.dealerData = dealer;
+
+                marker.bindPopup(createPopupContent(dealer), {
+                    maxWidth: 320,
+                    className: 'custom-popup'
+                });
+
+                marker.on('click', () => {
+                    setActiveMarker(dealer.id);
+                    scrollToDealer(dealer.id);
+                });
+
+                markerClusterGroup.addLayer(marker);
+                dealerMarkers.push(marker);
+            });
+        }
+
+        // Create popup content
+        function createPopupContent(dealer) {
+            const servicesHtml = dealer.services.map(s => 
+                `<span class="service-tag">${s}</span>`
+            ).join('');
+
+            const hours = dealer.hours ? 
+                `Mon-Fri: ${dealer.hours['monday-friday'] || '9:00 AM - 8:00 PM'}` : 
+                'Mon-Fri: 9:00 AM - 8:00 PM';
+
+            return `
+                <div class="popup-content">
+                    <div class="popup-header">
+                        <div class="popup-title">${dealer.name}</div>
+                        <span class="popup-type ${dealer.type}">
+                            <i class="fas ${dealer.type === 'service' ? 'fa-wrench' : 'fa-store'}"></i>
+                            ${dealer.type === 'service' ? 'Service Center' : 'Sales Showroom'}
+                        </span>
+                    </div>
+                    <div class="popup-info">
+                        <div class="popup-info-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>${dealer.address}, ${dealer.city}, ${dealer.state}</span>
+                        </div>
+                        <div class="popup-info-item">
+                            <i class="fas fa-phone"></i>
+                            <span>${dealer.phone}</span>
+                        </div>
+                        <div class="popup-info-item">
+                            <i class="fas fa-clock"></i>
+                            <span>${hours}</span>
+                        </div>
+                    </div>
+                    <div class="popup-services">
+                        <div class="popup-services-label">Services Available</div>
+                        <div class="popup-services-list">${servicesHtml}</div>
+                    </div>
+                    <div class="popup-actions">
+                        <button class="popup-btn primary" onclick="getDirections(${dealer.lat}, ${dealer.lng})">
+                            <i class="fas fa-directions"></i> Directions
+                        </button>
+                        <button class="popup-btn secondary" onclick="callDealer('${dealer.phone}')">
+                            <i class="fas fa-phone"></i> Call
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Update dealer list in sidebar
+        function updateDealerList(dealers) {
+            const listContainer = document.getElementById('dealer-list');
+            const countElement = document.getElementById('dealer-count');
+            
+            countElement.textContent = dealers.length;
+
+            if (dealers.length === 0) {
+                listContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-search"></i>
+                        <p>No dealerships found matching your criteria</p>
+                    </div>
+                `;
+                return;
+            }
+
+            listContainer.innerHTML = dealers.map(dealer => `
+                <div class="dealer-card ${dealer.type}-type ${activeMarkerId === dealer.id ? 'active' : ''}" 
+                     data-id="${dealer.id}" 
+                     onclick="focusOnDealer(${dealer.id})">
+                    <div class="dealer-card-header">
+                        <div>
+                            <div class="dealer-name">${dealer.name}</div>
+                            <span class="dealer-type ${dealer.type}">
+                                <i class="fas ${dealer.type === 'service' ? 'fa-wrench' : 'fa-store'}"></i>
+                                ${dealer.type === 'service' ? 'Service' : 'Sales'}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="dealer-address">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>${dealer.address}, ${dealer.city}, ${dealer.state}</span>
+                    </div>
+                    <div class="dealer-meta">
+                        <div class="dealer-distance">
+                            <i class="fas fa-route"></i>
+                            <span>${userLocation ? calculateDistance(dealer) : 'Enable location'}</span>
+                        </div>
+                        <div class="dealer-actions">
+                            <button class="action-btn call" onclick="event.stopPropagation(); callDealer('${dealer.phone}')" title="Call">
+                                <i class="fas fa-phone"></i>
+                            </button>
+                            <button class="action-btn directions" onclick="event.stopPropagation(); getDirections(${dealer.lat}, ${dealer.lng})" title="Directions">
+                                <i class="fas fa-directions"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Update stats
+        function updateStats() {
+            const salesCount = allDealers.filter(d => d.type === 'sales').length;
+            const serviceCount = allDealers.filter(d => d.type === 'service').length;
+            
+            document.getElementById('sales-count').textContent = `${salesCount} Sales`;
+            document.getElementById('service-count').textContent = `${serviceCount} Service`;
+        }
+
+        // Focus on a specific dealer
+        function focusOnDealer(dealerId) {
+            const marker = dealerMarkers.find(m => m.dealerId === dealerId);
+            if (marker) {
+                setActiveMarker(dealerId);
+                map.setView([marker.dealerData.lat, marker.dealerData.lng], 15);
+                
+                // Open popup after a brief delay to allow map to pan
+                setTimeout(() => {
+                    marker.openPopup();
+                }, 300);
+            }
+        }
+
+        // Set active marker with animation
+        function setActiveMarker(dealerId) {
+            // Remove active state from previous marker
+            if (activeMarkerId !== null) {
+                const prevMarker = dealerMarkers.find(m => m.dealerId === activeMarkerId);
+                if (prevMarker) {
+                    prevMarker.setIcon(createMarkerIcon(prevMarker.dealerData.type, false));
+                }
+            }
+
+            // Set new active marker
+            activeMarkerId = dealerId;
+            const marker = dealerMarkers.find(m => m.dealerId === dealerId);
+            if (marker) {
+                marker.setIcon(createMarkerIcon(marker.dealerData.type, true));
+            }
+
+            // Update dealer list active state
+            document.querySelectorAll('.dealer-card').forEach(card => {
+                card.classList.remove('active');
+                if (parseInt(card.dataset.id) === dealerId) {
+                    card.classList.add('active');
+                }
+            });
+        }
+
+        // Scroll to dealer in list
+        function scrollToDealer(dealerId) {
+            const card = document.querySelector(`.dealer-card[data-id="${dealerId}"]`);
+            if (card) {
+                card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        // Search functionality
+        function setupSearch() {
+            const searchInput = document.getElementById('search-input');
+            const clearBtn = document.getElementById('search-clear');
+
+            searchInput.addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase().trim();
+                clearBtn.classList.toggle('visible', query.length > 0);
+                
+                let filtered = allDealers;
+                
+                if (currentFilter !== 'all') {
+                    filtered = filtered.filter(d => d.type === currentFilter);
+                }
+
+                if (query) {
+                    filtered = filtered.filter(d => 
+                        d.name.toLowerCase().includes(query) ||
+                        d.city.toLowerCase().includes(query) ||
+                        d.state.toLowerCase().includes(query) ||
+                        d.address.toLowerCase().includes(query)
+                    );
+                }
+
+                updateDealerList(filtered);
+                addMarkersToMap(filtered);
+            });
+        }
+
+        function clearSearch() {
+            const searchInput = document.getElementById('search-input');
+            searchInput.value = '';
+            document.getElementById('search-clear').classList.remove('visible');
+            filterDealers(currentFilter, document.querySelector(`.filter-pill[data-filter="${currentFilter}"]`));
+        }
+
+        // Filter dealers by type
+        function filterDealers(type, btn) {
+            currentFilter = type;
+            
+            // Update active pill
+            document.querySelectorAll('.filter-pill').forEach(pill => pill.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+
+            let filtered = allDealers;
+            if (type !== 'all') {
+                filtered = filtered.filter(d => d.type === type);
+            }
+
+            // Also apply search filter if exists
+            const query = document.getElementById('search-input').value.toLowerCase().trim();
+            if (query) {
+                filtered = filtered.filter(d => 
+                    d.name.toLowerCase().includes(query) ||
+                    d.city.toLowerCase().includes(query) ||
+                    d.state.toLowerCase().includes(query)
+                );
+            }
+
+            updateDealerList(filtered);
+            addMarkersToMap(filtered);
+        }
+
+        // Get user location
+        function getUserLocation() {
+            if (!navigator.geolocation) {
+                showToast('Geolocation not supported by your browser', 'error');
+                return;
+            }
+
+            showToast('Getting your location...', 'info');
+
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    userLocation = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+
+                    // Add/update user marker
+                    if (userLocationMarker) {
+                        map.removeLayer(userLocationMarker);
+                    }
+
+                    userLocationMarker = L.marker([userLocation.lat, userLocation.lng], {
+                        icon: L.divIcon({
+                            className: 'user-marker',
+                            html: '<div class="user-location-marker"></div>',
+                            iconSize: [24, 24],
+                            iconAnchor: [12, 12]
+                        })
+                    }).addTo(map).bindPopup('Your Location');
+
+                    map.setView([userLocation.lat, userLocation.lng], 12);
+                    
+                    // Update distances in dealer list
+                    updateDealerList(getFilteredDealers());
+                    
+                    showToast('Location found!', 'success');
+                },
+                (error) => {
+                    console.error('Geolocation error:', error);
+                    showToast('Unable to get your location', 'error');
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 300000
+                }
+            );
+        }
+
+        // Get currently filtered dealers
+        function getFilteredDealers() {
+            let filtered = allDealers;
+            if (currentFilter !== 'all') {
+                filtered = filtered.filter(d => d.type === currentFilter);
+            }
+            const query = document.getElementById('search-input').value.toLowerCase().trim();
+            if (query) {
+                filtered = filtered.filter(d => 
+                    d.name.toLowerCase().includes(query) ||
+                    d.city.toLowerCase().includes(query)
+                );
+            }
+            return filtered;
+        }
+
+        // Calculate distance using Haversine formula
+        function calculateDistance(dealer) {
+            if (!userLocation) return 'Unknown';
+            
+            const R = 6371; // Earth's radius in km
+            const dLat = (dealer.lat - userLocation.lat) * Math.PI / 180;
+            const dLng = (dealer.lng - userLocation.lng) * Math.PI / 180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                      Math.cos(userLocation.lat * Math.PI / 180) * Math.cos(dealer.lat * Math.PI / 180) *
+                      Math.sin(dLng/2) * Math.sin(dLng/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            const distance = R * c;
+            
+            return `${distance.toFixed(1)} km`;
+        }
+
+        // Get directions
+        function getDirections(lat, lng) {
+            const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+            window.open(url, '_blank');
+        }
+
+        // Call dealer
+        function callDealer(phone) {
+            window.location.href = `tel:${phone}`;
+        }
+
+        // Center map on India
+        function centerOnIndia() {
+            map.setView([20.5937, 78.9629], 5);
+            showToast('Map reset to India view', 'info');
+        }
+
+        // Toggle mobile view
+        function toggleMobileView() {
+            const sidebar = document.getElementById('sidebar');
+            const btn = document.getElementById('mobile-toggle');
+            const isVisible = sidebar.style.display !== 'none';
+            
+            if (isVisible) {
+                sidebar.style.display = 'none';
+                btn.innerHTML = '<i class="fas fa-list"></i><span>View List</span>';
+            } else {
+                sidebar.style.display = 'flex';
+                btn.innerHTML = '<i class="fas fa-map"></i><span>View Map</span>';
+            }
+        }
+
+        // Hide loading overlay
+        function hideLoading() {
+            const overlay = document.getElementById('loading-overlay');
+            overlay.style.opacity = '0';
+            setTimeout(() => overlay.remove(), 500);
+        }
+
+        // Show toast notification
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            const icon = toast.querySelector('.toast-icon');
+            const messageEl = toast.querySelector('.toast-message');
+
+            const icons = {
+                success: 'fa-check-circle',
+                error: 'fa-exclamation-triangle',
+                info: 'fa-info-circle'
+            };
+
+            toast.className = `toast ${type}`;
+            icon.className = `fas ${icons[type]} toast-icon`;
+            messageEl.textContent = message;
+
+            toast.classList.add('visible');
+
+            setTimeout(() => {
+                toast.classList.remove('visible');
+            }, 3000);
+        }
+
+        // Handle online/offline
+        window.addEventListener('online', () => showToast('Connection restored', 'success'));
+        window.addEventListener('offline', () => showToast('Connection lost', 'error'));
+    </script>
+</body>
+</html>
